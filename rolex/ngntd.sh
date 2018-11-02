@@ -26,7 +26,7 @@ usage() {
 
 printf "\n\033[1musage: $0 [Wot u want?]\033[0m\n"
 printf "\nJust available for Oreo and Pie:"
-printf "\n     o         - for Oreo\n"
+printf "\n     o         - for Oreo"
 printf "\n     p         - for Pie\n"
 }
 echo -e ""
