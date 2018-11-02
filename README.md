@@ -21,16 +21,10 @@ Run Commands
       git clone https://github.com/najahiiii/noob-script.git -b noob
 ```
 
-* Clone the source you want.
+* Example.
 
 ```bash
-      bash scripts/<name_of_the_source>
-```
-
-Example
-
-```bash
-      bash scripts/whyred/darkstar.sh 
+      bash rolex/<name_of_the_source>
 ```
 
 * Let the script fucked ur Environment :P.
