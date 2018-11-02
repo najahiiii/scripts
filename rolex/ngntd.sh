@@ -24,10 +24,10 @@ CLR_BLD_CYA=$CLR_RST$CLR_BLD$(tput setaf 6) #  cyan, bold
 
 usage() {
 
-printf "\n\033[1musage: $0 [Wot u want?]\033[0m\n"
-printf "\nJust available for Oreo and Pie:"
-printf "\n     o         - for Oreo"
-printf "\n     p         - for Pie\n"
+printf "\n\033[1musage: $0 [o / p]\033[0m\n"
+printf "\nJust available for Oreo and Pie :"
+printf "\no         - for Oreo (Lineage-15.1)"
+printf "\np         - for Pie (lineage-16.0)\n"
 }
 echo -e ""
 echo -e "${CLR_BLD_RED} ███▄    █   ▄████  ███▄    █ ▄▄▄█████▓▓█████▄ ${CLR_RST}";
@@ -63,10 +63,9 @@ git clone https://github.com/najahiiii/android_vendor_xiaomi_rolex.git -b lineag
 git clone https://github.com/najahiiii/ngntdkernel_f.git kernel/xiaomi/msm8917
 echo -e "${CLR_BLD_BLU}Cloning Complete...${CLR_RST}"
 echo -e ""
-echo -e "${CLR_BLD_BLU}Now You are good to Go${CLR_RST}"
-echo -e ""
+echo -e "${CLR_BLD_BLU}Oke gass...${CLR_RST}"
 echo -e ""
 else
 usage
-printf "\n\e[1;31mERROR:\e[0m Unknown option: $1\n"
+printf "\n\e[1;31mERROR:\e[0m Nub, bangsad: $1\n"
 fi
