@@ -35,17 +35,15 @@ echo -e "${CLR_BLD_RED} ██ ▀█   █  ██▒ ▀█▒ ██ ▀█  
 echo -e "${CLR_BLD_RED}▓██  ▀█ ██▒▒██░▄▄▄░▓██  ▀█ ██▒▒ ▓██░ ▒░░██   █▌${CLR_RST}";
 echo -e "${CLR_BLD_RED}▓██▒  ▐▌██▒░▓█  ██▓▓██▒  ▐▌██▒░ ▓██▓ ░ ░▓█▄   ▌${CLR_RST}";
 echo -e "${CLR_BLD_RED}▒██░   ▓██░░▒▓███▀▒▒██░   ▓██░  ▒██▒ ░ ░▒████▓ ${CLR_RST}";
-echo -e "${CLR_BLD_RED}░ ▒░   ▒ ▒  ░▒   ▒ ░ ▒░   ▒ ▒   ▒ ░░    ▒▒▓  ▒ ${CLR_RST}";
-echo -e "${CLR_BLD_RED}░ ░░   ░ ▒░  ░   ░ ░ ░░   ░ ▒░    ░     ░ ▒  ▒ ${CLR_RST}";
+echo -e "${CLR_BLD_RED}░ ▒░   ▒ ▒░░░▒   ▒ ░ ▒░   ▒ ▒░  ▒ ░░    ▒▒▓  ▒ ${CLR_RST}";
+echo -e "${CLR_BLD_RED}░ ░░   ░ ▒░░ ░   ░ ░ ░░   ░ ▒░  ░ ░     ░ ▒  ▒ ${CLR_RST}";
 echo -e "${CLR_BLD_RED}   ░   ░ ░ ░ ░   ░    ░   ░ ░   ░       ░ ░  ░ ${CLR_RST}";
-echo -e "${CLR_BLD_RED}         ░       ░          ░             ░    ${CLR_RST}";
+echo -e "${CLR_BLD_RED}         ░       ░          ░           ░ ░    ${CLR_RST}";
 echo -e "${CLR_BLD_RED}                                        ░      ${CLR_RST}";
 echo -e ""
 [ -z "$1" ] && usage && exit
-
 if [ $1 = "o" ]
   then
-echo -e ""
 echo -e "${CLR_BLD_BLU}Cloninging device repos...${CLR_RST}"
 git clone https://github.com/najahiiii/android_device_xiaomi_rolex.git -b lineage-15.1 device/xiaomi/rolex
 git clone https://github.com/najahiiii/android_vendor_xiaomi_rolex.git -b lineage-15.1 vendor/xiaomi/rolex
