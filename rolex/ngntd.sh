@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright (C) 2015 Paranoid Android Project
-# Copyright (C) 2018 Ahamd Thoriq Najahi<tlogitechnjhi@gmail.com>
+# Copyright (C) 2018 Ahmad Thoriq Najahi<tlogitechnjhi@gmail.com>
 # Copyright (C) 2018 Najahiiii@github
 
 # PA Colors
@@ -44,20 +44,20 @@ echo -e ""
 [ -z "$1" ] && usage && exit
 if [ $1 = "o" ]
   then
-echo -e "${CLR_BLD_BLU}Cloninging device repos...${CLR_RST}"
+echo -e "${CLR_BLD_BLU}Cloning Device, Vendor, Kernel sources...${CLR_RST}"
 git clone https://github.com/najahiiii/android_device_xiaomi_rolex.git -b lineage-15.1 device/xiaomi/rolex
 git clone https://github.com/najahiiii/android_vendor_xiaomi_rolex.git -b lineage-15.1 vendor/xiaomi/rolex
 git clone https://github.com/najahiiii/ngntdkernel_f.git kernel/xiaomi/msm8917
 echo -e "${CLR_BLD_BLU}Cloning Complete...${CLR_RST}"
 echo -e ""
-echo -e "${CLR_BLD_BLU}Now You are good to Go${CLR_RST}"
+echo -e "${CLR_BLD_BLU}Oke gass...${CLR_RST}"
 echo -e ""
 echo -e ""
 
 elif [ $1 = "p" ]
   then
 echo -e ""
-echo -e "${CLR_BLD_BLU}Cloninging device repos...${CLR_RST}"
+echo -e "${CLR_BLD_BLU}Cloning Device, Vendor, Kernel sources...${CLR_RST}"
 git clone https://github.com/najahiiii/android_device_xiaomi_rolex.git -b lineage-16.0 device/xiaomi/rolex
 git clone https://github.com/najahiiii/android_vendor_xiaomi_rolex.git -b lineage-16.0 vendor/xiaomi/rolex
 git clone https://github.com/najahiiii/ngntdkernel_f.git kernel/xiaomi/msm8917
