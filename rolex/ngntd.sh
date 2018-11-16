@@ -58,8 +58,8 @@ elif [ $1 = "p" ]
   then
 echo -e ""
 echo -e "${CLR_BLD_BLU}Cloning Device, Vendor, Kernel sources...${CLR_RST}"
-git clone https://github.com/najahiiii/android_device_xiaomi_rolex.git -b lineage-16.0 device/xiaomi/rolex
-git clone https://github.com/najahiiii/android_vendor_xiaomi_rolex.git -b lineage-16.0 vendor/xiaomi/rolex
+git clone https://github.com/redmidevs/android_device_xiaomi_rolex.git -b lineage-16.0 device/xiaomi/rolex
+git clone https://github.com/redmidevs/android_vendor_xiaomi_rolex.git -b lineage-16.0 vendor/xiaomi/rolex
 git clone https://github.com/najahiiii/ngntdkernel_f.git kernel/xiaomi/msm8917
 echo -e "${CLR_BLD_BLU}Cloning Complete...${CLR_RST}"
 echo -e ""
