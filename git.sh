@@ -38,7 +38,9 @@ echo -e ""
 git config --global user.email "tlogitechnjhi@gmail.com"
 git config --global user.name "Ahmad Thoriq Najahi"
 echo -e "${CLR_BLD_YLW}Setting-up git global config...${CLR_RST}"
-git config --global alias.cp 'cherry-pick -s'
-git config --global alias.c 'commit -s'
 echo -e ""
-echo -e "${CLR_BLD_GRN}Ok, Beres. Ngntd....${CLR_RST}"
+git config --global alias.cp 'cherry-pick -s -S'
+git config --global alias.cpn 'cherry-pick -n'
+git config --global alias.c 'commit -s -S'
+echo -e ""
+echo -e "${CLR_BLD_GRN}Ok, Beres. Ngntd...${CLR_RST}"
