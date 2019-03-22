@@ -1,0 +1,11 @@
+#!bin/bash/sh
+git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc4.9.4-20190301 ${PWD}/gcc
+export ARCH=arm64 
+export KBUILD_BUILD_USER=Najahi
+export KBUILD_BUILD_HOST=SemaphoreCI
+export USE_CCACHE=1
+export CACHE_DIR=~/.ccache
+export CROSS_COMPILE=${PWD}/gcc/bin/aarch64-linux-gnu-
+mkdir out
+make -C $(pwd) O=out rolex_defconfig
+make -C ${PWD} O=out -j$(nproc --all)
