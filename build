@@ -1,5 +1,5 @@
 #!bin/bash
-IMAGE=$(PWD)/out/arch/arm64/boot/Image.gz-dtb
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc5-20190314 gcc
 curl -F chat_id="$chat_id" -F sticker="CAADBQADxwADQxCzIgABXT-CE5tyWwI" https://api.telegram.org/bot$token/sendSticker
 curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>"$(git rev-parse --abbrev-ref HEAD)"</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${PWD}/gcc/bin/aarch64-linux-gnu-gcc --version | head -n 1)</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested%0A<b>Semaphore CI Build Info</b> - <a href='https://semaphoreci.com/najahiiii/moaikernal'>Status</a>"
