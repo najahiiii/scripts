@@ -37,7 +37,7 @@ cd AnyKernel
 zip -r9 ChipsKernel-Pie-LLVM9-${tanggal}.zip *
 END=$(date +"%s")
 DIFF=$(($END - $START))
-curl -F chat_id="$chat_id" -F document=@"ChipsKernel-Pie-LLVM9-${tanggal}.zip" -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds. | #unified" https://api.telegram.org/bot$token/sendDocument
+curl -F chat_id="$chat_id" -F document=@"ChipsKernel-Pie-LLVM9-${tanggal}.zip" -F "disable_web_page_preview=true" -F "parse_mode=html" -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build log</b> <a href='https://del.dog/raw/${KEY}'>here</a> | #unified" https://api.telegram.org/bot$token/sendDocument
 cd ..
 rm -rf out
 rm -rf AnyKernel/zImage
