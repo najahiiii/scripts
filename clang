@@ -21,7 +21,8 @@ function deldog() {
 }
 # Fin Error
 function finerr() {
-        curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=markdown&text=Build throw an error(s)"
+        deldog build.log
+        curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=Build throw an error(s) | <b>Build log</b> <a href='https://del.dog/raw/${KEY}'>here</a>"
         exit 1
 }
 make -s -C $(pwd) O=out rolex_defconfig
@@ -41,4 +42,3 @@ cd ..
 rm -rf out
 rm -rf AnyKernel/zImage
 rm -rf AnyKernel/ChipsKernel*.zip
-deldog build.log
