@@ -3,7 +3,7 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b linaro-chips gcc
 git clone https://github.com/najahiiii/DragonTC.git -b 9.0 dragontc
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
-curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${PWD}/gcc/bin/aarch64-chips-linux-gnu-gcc --version | head -n 1)</code>%0AClang <code>$(${PWD}/dragontc/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested%0A<b>Semaphore CI Build Info</b> - <a href='https://semaphoreci.com/najahiiii/moaikernal'>Status</a>"
+curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${PWD}/gcc/bin/aarch64-chips-linux-android-gcc --version | head -n 1)</code>%0AClang <code>$(${PWD}/dragontc/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested%0A<b>Semaphore CI Build Info</b> - <a href='https://semaphoreci.com/najahiiii/moaikernal'>Status</a>"
 tanggal=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
@@ -26,7 +26,7 @@ function finerr() {
         exit 1
 }
 make -s -C $(pwd) O=out rolex_defconfig
-nohup make -C $(pwd) CC=$(pwd)/dragontc/bin/clang CROSS_COMPILE=$(pwd)/gcc/bin/aarch64-chips-linux-gnu- O=out -j6 -l4 >> build.log
+nohup make -C $(pwd) CC=$(pwd)/dragontc/bin/clang CROSS_COMPILE=$(pwd)/gcc/bin/aarch64-chips-linux-android- O=out -j6 -l4 >> build.log
 if ! [ -a $IMAGE ]; then
 	echo -e "Error Cok"
 	finerr
