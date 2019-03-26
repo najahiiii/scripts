@@ -1,9 +1,9 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b linaro8-20190216 gcc
-git clone https://github.com/najahiiii/clang.git -b llvm9 clang
+git clone https://github.com/najahiiii/clang.git -b llvm9 llvm9
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
-CT="$(pwd)/clang/bin/clang"
+CT="$(pwd)/llvm9/bin/clang"
 CLANG_TRIPLE=aarch64-linux-gnu-
 CLANG_LD=aarch64-linux-gnu-ld.gold
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
