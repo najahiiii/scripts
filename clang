@@ -12,6 +12,17 @@ export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export USE_CCACHE=1
 export CACHE_DIR=~/.ccache
+# Function to upload to pastebin.com
+function pastebin() {
+    title="build.log"
+    expiration="N"
+    token="ddfc4ce9d8ad271c0c02f4c6ba708b8e"
+    input="$(cat build.log)"
+    user_key="9a7a9136e6cc54ef0d82eb936d73be89"
+    query="api_option=paste&api_dev_key=${token}&api_user_key=${user_key}&api_paste_code=${input}&api_paste_private=1&api_paste_name=${title}&api_paste_expire_date=${expiration}"
+    curl -s -X POST https://pastebin.com/api/api_post.php -d "${query}" > link
+    HASIL="$(cat link)"
+}
 # Function to upload to del.dog
 function deldog() {
     RESULT=$(curl -sf --data-binary @"${1:--}" https://del.dog/documents) || {
@@ -23,8 +34,8 @@ function deldog() {
 }
 # Fin Error
 function finerr() {
-        deldog build.log
-        curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=Build throw an error(s) | <b>Build logs</b> <a href='https://del.dog/raw/${KEY}'>here</a>"
+        pastebin
+        curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=Build throw an error(s) | <b>Build logs</b> <a href='${HASIL}'>here</a>"
         exit 1
 }
 make -s -C $(pwd) O=out rolex_defconfig
@@ -38,8 +49,8 @@ cd AnyKernel
 zip -r9 ChipsKernel-Pie-DragonTC9-${tanggal}.zip *
 END=$(date +"%s")
 DIFF=$(($END - $START))
-deldog build.log
-curl -F chat_id="$chat_id" -F document=@"ChipsKernel-Pie-DragonTC9-${tanggal}.zip" -F "disable_web_page_preview=true" -F "parse_mode=html" -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='https://del.dog/raw/${KEY}'>here</a> | #unified" https://api.telegram.org/bot$token/sendDocument
+pastebin
+curl -F chat_id="$chat_id" -F document=@"ChipsKernel-Pie-DragonTC9-${tanggal}.zip" -F "disable_web_page_preview=true" -F "parse_mode=html" -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified" https://api.telegram.org/bot$token/sendDocument
 cd ..
 rm -rf out
 rm -rf AnyKernel/zImage
