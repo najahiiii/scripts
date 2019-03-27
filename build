@@ -5,7 +5,7 @@ GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 CLANG_TRIPLE=aarch64-linux-gnu-
 CLANG_LD=aarch64-linux-gnu-ld.gold
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
-curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${GCC}gcc --version | head -n 1)</code>%0AClang <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested%0A<b>Semaphore CI Build Info</b> - <a href='https://semaphoreci.com/najahiiii/moaikernal'>Status</a>"
+curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested%0A<b>Semaphore CI Build Info</b> - <a href='https://semaphoreci.com/najahiiii/moaikernal'>Status</a>"
 tanggal=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
