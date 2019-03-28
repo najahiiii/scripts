@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
-git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-chips gcc
-GCC="$(pwd)/gcc/bin/aarch64-chips-linux-gnu-"
+git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b chips-linaro gcc
+GCC="$(pwd)/gcc/bin/aarch64-chips-linux-android-"
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
 curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested"
 tanggal=$(date +'%H%M-%d%m%y')
