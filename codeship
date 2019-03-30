@@ -1,0 +1,26 @@
+#!bin/bash
+git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc4.9.4-20190301 $(pwd)/gcc
+export ARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export USE_CCACHE=1
+export CACHE_DIR=~/.ccache
+export CROSS_COMPILE=$(pwd)/gcc/bin/aarch64-linux-gnu-
+kernel=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+tanggal=$(date +'%H%M-%d%m%y')
+start=$(date +"%s")
+function push() {
+	curl -F document=@zImage "https://api.telegram.org/bot$token/sendDocument" \
+			-F chat_id="$chat_id" \
+			-F "disable_web_page_preview=true" \
+			-F "parse_mode=html" \
+			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified"
+}
+make -C $(pwd) O=out rolex_defconfig
+make -C $(pwd) O=out -j$(nproc --all)
+if ! [ -a $kernel ]; then
+	exit 1
+fi
+cp out/arch/arm64/boot/Image.gz-dtb ./zImage
+END=$(date +"%s")
+DIFF=$(($END - $START))
+push
