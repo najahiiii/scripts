@@ -4,18 +4,27 @@ git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190329 gc
 git clone https://github.com/najahiiii/dragontc.git -b 9.0 clang
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 CT="$(pwd)/clang/bin/clang"
-TZ="Asia/Jakarta"
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
 curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${GCC}gcc --version | head -n 1)</code>%0AClang <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #untested"
 tanggal=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
-export TZ
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=SemaphoreCI
 export USE_CCACHE=1
 export CACHE_DIR=~/.ccache
-# Function to upload to sprunge
+
+# Push kernel to channel
+function push() {
+	ZIP=$(echo Chips*.zip)
+	curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
+			-F chat_id="$chat_id" \
+			-F "disable_web_page_preview=true" \
+			-F "parse_mode=html" \
+			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified"
+}
+
+# Function upload logs to sprunge
 function sprunge() {
     cat build.log | curl -F 'sprunge=<-' http://sprunge.us > link
     HASIL="$(cat link)"
@@ -38,7 +47,7 @@ cd AnyKernel
 zip -r9 ChipsKernel-Pie-LLVM9-${tanggal}.zip *
 END=$(date +"%s")
 DIFF=$(($END - $START))
-curl -F chat_id="$chat_id" -F document=@"ChipsKernel-Pie-LLVM9-${tanggal}.zip" -F "disable_web_page_preview=true" -F "parse_mode=html" -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified" https://api.telegram.org/bot$token/sendDocument
+push
 cd ..
 rm -rf out
 rm -rf AnyKernel/zImage
