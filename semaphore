@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190329 gcc
-git clone https://github.com/najahiiii/dragontc.git -b 9.0 clang
+git clone https://github.com/najahiiii/clang.git -b personal clang
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 CT="$(pwd)/clang/bin/clang"
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
@@ -13,7 +13,6 @@ export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=SemaphoreCI
 export USE_CCACHE=1
 export CACHE_DIR=~/.ccache
-
 # Push kernel to channel
 function push() {
 	ZIP=$(echo Chips*.zip)
@@ -23,7 +22,6 @@ function push() {
 			-F "parse_mode=html" \
 			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified"
 }
-
 # Function upload logs to sprunge
 function sprunge() {
     cat build.log | curl -F 'sprunge=<-' http://sprunge.us > link
