@@ -22,25 +22,29 @@ function push() {
 			-F "parse_mode=html" \
 			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified"
 }
-# Function upload logs to sprunge
-function sprunge() {
-    cat build.log | curl -F 'sprunge=<-' http://sprunge.us > link
+# Function upload logs to my own server paste
+function paste() {
+    cat build.log | curl -F 'chips=<-' http://142.93.125.135 > link
     HASIL="$(cat link)"
 }
 # Fin Error
 function finerr() {
-        sprunge
-        curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=Build throw an error(s) | <b>Build logs</b> <a href='${HASIL}'>here</a>"
+        paste
+        curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+			-d chat_id="$chat_id" \
+			-d "disable_web_page_preview=true" \
+			-d "parse_mode=markdown" \
+			-d text="Build throw an error(s) | **Build logs** [here](${HASIL})"
         exit 1
 }
 make -s -C $(pwd) O=out rolex_defconfig
-make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} O=out -j32 -l12 2>&1| tee build.log
+make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
 if ! [ -a $IMAGE ]; then
 	finerr
 	exit 1
 fi
 cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/zImage
-sprunge
+paste
 cd AnyKernel
 zip -r9 ChipsKernel-Pie-LLVM9-${tanggal}.zip *
 END=$(date +"%s")
