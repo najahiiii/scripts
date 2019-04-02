@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 git clone https://github.com/najahiiii/AnyKernel.git AnyKernel
-git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b linaro8-20190216 gcc
+git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b linaro8-20190402 gcc
 git clone https://github.com/najahiiii/clang.git -b llvm9 clang
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 CT="$(pwd)/clang/bin/clang"
