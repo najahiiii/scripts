@@ -1,18 +1,17 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
-git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b linaro8-20190402 gcc
-git clone https://github.com/najahiiii/clang.git -b llvm9 clang
-GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
-CT="$(pwd)/clang/bin/clang"
+echo "Cloning Toolchain, and AnyKernel"
+git clone --quiet -j32 https://github.com/najahiiii/AnyKernel.git AnyKernel
+git clone --quiet -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
+echo "Done"
+GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
 curl -s -F chat_id=$chat_id -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$token/sendSticker
-curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel CAF</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${GCC}gcc --version | head -n 1)</code>%0AClang <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #untested"
+curl -s -X POST https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id -d "disable_web_page_preview=true" -d "parse_mode=html&text=<b>ChipsKernel Google-Common</b> new build is up"'!'"%0AStarted on <code>$(hostname)</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0ACompiler <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #untested"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=SemaphoreCI
-export USE_CCACHE=1
-export CACHE_DIR=~/.ccache
 # Push kernel to channel
 function push() {
 	ZIP=$(echo Chips*.zip)
@@ -38,7 +37,7 @@ function finerr() {
         exit 1
 }
 make -s -C $(pwd) O=out rolex_defconfig
-make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
+make -s -C $(pwd) CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
 if ! [ -a $IMAGE ]; then
 	finerr
 	exit 1
@@ -46,7 +45,7 @@ fi
 cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/zImage
 paste
 cd AnyKernel
-zip -r9 ChipsKernel-Pie-LLVM9-${tanggal}.zip *
+zip -r9 ChipsKernel-Pie-GCommon-${tanggal}.zip *
 END=$(date +"%s")
 DIFF=$(($END - $START))
 push
