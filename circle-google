@@ -37,7 +37,7 @@ function finerr() {
         exit 1
 }
 make -s -C $(pwd) O=out rolex_defconfig
-make -C $(pwd) CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
+make -s -C $(pwd) CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
 if ! [ -a $IMAGE ]; then
 	finerr
 	exit 1
