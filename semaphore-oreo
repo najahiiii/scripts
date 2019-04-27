@@ -22,7 +22,7 @@ function sendinfo() {
                         -d chat_id=$chat_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="<b>ChipsKernel CAF</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code>(Android 8.1/Oreo)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing Compiler: <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #untested"
+                        -d text="<b>ChipsKernel CAF</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 8.1/Oreo)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing Compiler: <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #untested"
 }
 # Push kernel to channel
 function push() {
