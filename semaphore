@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Clone Toolchains"
-git clone --quiet -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc8-201903-A gcc
+git clone --quiet -j32 https://github.com/najahiii/aarch64-linux-gnu.git -b gcc10 gcc
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
