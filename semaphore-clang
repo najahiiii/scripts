@@ -17,13 +17,21 @@ function sticker() {
                         -d sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" \
                         -d chat_id=$chat_id
 }
-# Send info plox
+# Send info channel
 function sendinfo() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
                         -d chat_id=$chat_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
                         -d text="<b>ChipsKernel CAF</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing Compiler:  <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #untested"
+}
+# Send private info
+function sendpriv() {
+        curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+                        -d chat_id=$priv_id \
+                        -d "disable_web_page_preview=true" \
+                        -d "parse_mode=html" \
+                        -d text="ChipsKernel CI Started%0A%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
 }
 # Push kernel to channel
 function push() {
@@ -68,6 +76,7 @@ function zipping() {
         cd ..
 }
 sticker
+sendpriv
 sendinfo
 compile
 zipping
