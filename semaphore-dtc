@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Clone Toolchains"
-git clone --quiet -j32 https://github.com/najahiiii/clang.git -b llvm9 clang
+git clone --quiet -j32 https://github.com/najahiiii/DragonTC.git -b 9.0 clang
 git clone --quiet -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 gcc
 echo "Done"
 CT="$(pwd)/clang/bin/clang"
@@ -41,7 +41,7 @@ function push() {
 			-F chat_id="$chat_id" \
 			-F "disable_web_page_preview=true" \
 			-F "parse_mode=html" \
-			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified | <b>Clang 9.0.3</b>"
+			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified | <b>DragonTC 9</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
