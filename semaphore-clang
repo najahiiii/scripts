@@ -76,6 +76,7 @@ function zipping() {
         cd ..
 }
 sendpriv
+#sticker
 sendinfo
 compile
 zipping

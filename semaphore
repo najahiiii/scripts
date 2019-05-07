@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Clone Toolchains"
-git clone --quiet -j32 https://github.com/najahiii/aarch64-linux-gnu.git -b gcc10 gcc
+git clone --quiet -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 gcc
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
@@ -39,7 +39,7 @@ function push() {
 			-F chat_id="$chat_id" \
 			-F "disable_web_page_preview=true" \
 			-F "parse_mode=html" \
-			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified | <b>GCC 10.0.0</b>"
+			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified | <b>GCC 9.1.0</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -74,7 +74,7 @@ function zipping() {
         cd ..
 }
 sendpriv
-sticker
+#sticker
 sendinfo
 compile
 zipping
