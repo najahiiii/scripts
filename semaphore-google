@@ -1,8 +1,8 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Clone Toolchains and AnyKernel"
-git clone --quiet -j32 https://github.com/najahiiii/AnyKernel.git AnyKernel
-git clone --quiet -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 gcc
+git clone -j32 https://github.com/najahiiii/AnyKernel.git AnyKernel
+git clone -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 gcc
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
