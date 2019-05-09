@@ -29,7 +29,7 @@ function sendpriv() {
                         -d chat_id=$priv_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="ChipsKernel CI Started%0AJob Name: ${SEMAPHORE_JOB_NAME}%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
+                        -d text="ChipsKernel CI Started%0AJob Name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/moaikernal/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
 }
 # Push kernel to channel
 function push() {
