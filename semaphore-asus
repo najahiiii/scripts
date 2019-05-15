@@ -15,7 +15,7 @@ export KBUILD_BUILD_HOST=NusantaraDevs
 # sticker plox
 function sticker() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
-                        -d sticker="CAADBQADHQEAAkMQsyKtQ5I2lssmTAI" \
+                        -d sticker="CAADAQADJwIAAnsWCAzRJLmSl7UuVAI" \
                         -d chat_id=$chat_id
 }
 # Send info plox channel
@@ -76,6 +76,7 @@ function zipping() {
         zip -r9 MoaiKernals-Pie-EAS-${tanggal}.zip *
         cd ..
 }
+sticker
 sendpriv
 sendinfo
 compile
@@ -83,4 +84,3 @@ zipping
 END=$(date +"%s")
 DIFF=$(($END - $START))
 push
-sticker
