@@ -1,10 +1,10 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Cloning dependencies"
-git clone -j32 https://github.com/najahiiii/DragonTC.git -b 9.0 clang
-git clone -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
-git clone -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-32-mirror gcc32
-git clone -j32 https://github.com/najahiiii/AnyKernel.git -b asus AnyKernel
+git clone -q -j32 https://github.com/najahiiii/DragonTC.git -b 9.0 clang
+git clone -q -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
+git clone -q -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-32-mirror gcc32
+git clone -q -j32 https://github.com/najahiiii/AnyKernel.git -b asus AnyKernel
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
 GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
@@ -17,7 +17,7 @@ export KBUILD_BUILD_HOST=NusantaraDevs
 # sticker plox
 function sticker() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
-                        -d sticker="CAADBQADIwEAAkMQsyKvqlryAYoJswI" \
+                        -d sticker="CAADBQADJAEAAkMQsyJyhDntYJSgSAI" \
                         -d chat_id=$chat_id
 }
 # Send info plox
@@ -34,7 +34,7 @@ function sendpriv() {
                         -d chat_id=$priv_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="MoaiKranuls CI Started%0AJob Name: DragonTC 9%0A<b>Pipeline jobs</b> <a href='${CIRCLE_BUILD_URL}'>here</a>"
+                        -d text="MoaiKranuls CI Started%0AJob name: DragonTC 9%0ACommit point: <a href='https://github.com/najahiiii/kernel_asus_sdm660/commit/${CIRCLE_SHA1}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='${CIRCLE_BUILD_URL}'>here</a>"
 }
 # Push kernel to channel
 function push() {
@@ -63,7 +63,7 @@ function finerr() {
 }
 # Compile plox
 function compile() {
-        make -s -C $(pwd) O=out rolex_defconfig
+        make -s -C $(pwd) O=out X00T_defconfig
         make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} CLANG_TRIPLE=aarch64-linux-gnu- O=out -j32 -l32 2>&1| tee build.log
             if ! [ -a $IMAGE ]; then
                 finerr
