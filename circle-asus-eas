@@ -64,7 +64,7 @@ function finerr() {
 # Compile plox
 function compile() {
         make -s -C $(pwd) O=out X00T_defconfig
-        make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} CLANG_TRIPLE=aarch64-linux-gnu- O=out -j32 -l32 2>&1| tee build.log
+        make -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} CLANG_TRIPLE=aarch64-linux-gnu- O=out -j32 -l32 2>&1| tee build.log
             if ! [ -a $IMAGE ]; then
                 finerr
                 exit 1
