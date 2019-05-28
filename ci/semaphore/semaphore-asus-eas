@@ -3,7 +3,7 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Cloning dependencies"
 git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
 git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-32-mirror gcc32
-git clone -j32 https://github.com/najahiiii/clang.git -b llvm9 clang
+git clone -j32 https://github.com/najahiiii/dragontc.git -b 9.0 clang
 git clone -j32 https://github.com/najahiiii/AnyKernel.git -b asus AnyKernel
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
@@ -34,7 +34,7 @@ function sendpriv() {
                         -d chat_id=$priv_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="MoaiKernals CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/moaikernal/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
+                        -d text="MoaiKernals CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/${SEMAPHORE_PROJECT_NAME}/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_WORKFLOW_ID}'>here</a>"
 }
 # Push kernel to channel
 function push() {
