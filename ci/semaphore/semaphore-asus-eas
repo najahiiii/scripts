@@ -17,7 +17,7 @@ export KBUILD_BUILD_HOST=NusantaraDevs
 # sticker plox
 function sticker() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
-                        -d sticker="CAADAQADJwIAAnsWCAzRJLmSl7UuVAI" \
+                        -d sticker="CAADBQADHQEAAkMQsyKtQ5I2lssmTAI" \
                         -d chat_id=$chat_id
 }
 # Send info plox channel
@@ -26,7 +26,7 @@ function sendinfo() {
                         -d chat_id=$chat_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="<b>MoaiKernals CAF EAS</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #Nightly"
+                        -d text="<b>ChipsKernel CAF EAS</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #Nightly"
 }
 # Send private info
 function sendpriv() {
@@ -34,17 +34,17 @@ function sendpriv() {
                         -d chat_id=$priv_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="MoaiKernals CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/${SEMAPHORE_PROJECT_NAME}/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_WORKFLOW_ID}'>here</a>"
+                        -d text="ChipsKernel CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/${SEMAPHORE_PROJECT_NAME}/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>"
 }
 # Push kernel to channel
 function push() {
         cd AnyKernel
-	ZIP=$(echo Moai*.zip)
+	ZIP=$(echo *.zip)
 	curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
 			-F chat_id="$chat_id" \
 			-F "disable_web_page_preview=true" \
 			-F "parse_mode=html" \
-			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <a href='${HASIL}'>Build logs</a> | For <b>ASUS MAX PRO M1 / X00T</b>"
+			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <a href='${HASIL}'>Build logs</a> | For <b>ASUS MAX PRO M1</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -75,7 +75,7 @@ function compile() {
 # Zipping
 function zipping() {
         cd AnyKernel
-        zip -r9 MoaiKernals-Pie-EAS-${tanggal}.zip *
+        zip -r9 ChipsKernel-Pie-EAS-${tanggal}.zip *
         cd ..
 }
 sticker
