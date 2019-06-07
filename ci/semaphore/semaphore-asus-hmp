@@ -3,7 +3,7 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Cloning dependencies"
 git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
 git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-32-mirror gcc32
-git clone -j32 https://github.com/najahiiii/clang.git -b llvm9 clang
+git clone --depth 1 -j32 https://github.com/NusantaraDevs/DragonTC.git -b 9.0 clang
 git clone -j32 https://github.com/najahiiii/AnyKernel.git -b asus AnyKernel
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
@@ -17,7 +17,7 @@ export KBUILD_BUILD_HOST=NusantaraDevs
 # sticker plox
 function sticker() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
-                        -d sticker="CAADAQADJwIAAnsWCAzRJLmSl7UuVAI" \
+                        -d sticker="CAADBQADJgEAAkMQsyKKVBNIRBu80wI" \
                         -d chat_id=$chat_id
 }
 # Send info plox channel
@@ -26,7 +26,7 @@ function sendinfo() {
                         -d chat_id=$chat_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="<b>MoaiKernals CAF HMP</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #untested"
+                        -d text="<b>ChipsKernel CAF HMP</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #untested"
 }
 # Send private info
 function sendpriv() {
@@ -34,7 +34,7 @@ function sendpriv() {
                         -d chat_id=$priv_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="MoaiKernals CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/moaikernal/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
+                        -d text="ChipsKernel CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/moaikernal/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
 }
 # Push kernel to channel
 function push() {
