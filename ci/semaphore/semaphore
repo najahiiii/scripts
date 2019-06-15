@@ -21,7 +21,7 @@ function sendinfo() {
                         -d chat_id=$chat_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="<b>ChipsKernel CAF</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #untested"
+                        -d text="<b>ChipsKernel CAF</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>ROLEX</b> (Redmi 4A)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #Nightly"
 }
 # Send private info
 function sendpriv() {
@@ -29,7 +29,7 @@ function sendpriv() {
                         -d chat_id=$priv_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="ChipsKernel CI Started%0AJob Name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/moaikernal/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
+                        -d text="ChipsKernel CI Started%0AJob name: ${SEMAPHORE_JOB_NAME}%0ACommit point: <a href='https://github.com/najahiiii/moaikernal/commit/${SEMAPHORE_GIT_SHA}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://ngntdkernel.semaphoreci.com/jobs/${SEMAPHORE_JOB_ID}'>here</a>"
 }
 # Push kernel to channel
 function push() {
@@ -39,7 +39,7 @@ function push() {
 			-F chat_id="$chat_id" \
 			-F "disable_web_page_preview=true" \
 			-F "parse_mode=html" \
-			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>Build logs</b> <a href='${HASIL}'>here</a> | #unified | <b>GCC 9.1.0</b>"
+			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | <b>GCC 9.1.0</b> | For <b>Xiaomi Redmi 4a/5a (Rolex/Riva)</b> | #Unified+"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -48,7 +48,6 @@ function paste() {
 }
 # Fin Error
 function finerr() {
-        paste
         curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
 			-d chat_id="$chat_id" \
 			-d "disable_web_page_preview=true" \
@@ -65,7 +64,6 @@ function compile() {
                 exit 1
             fi
         cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/zImage
-        paste
 }
 # Zipping
 function zipping() {
