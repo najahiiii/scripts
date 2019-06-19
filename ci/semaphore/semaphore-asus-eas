@@ -4,7 +4,7 @@ echo "Cloning dependencies"
 git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
 git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-32-mirror gcc32
 git clone --depth 1 -j32 https://github.com/NusantaraDevs/DragonTC.git -b 9.0 clang
-git clone -j32 https://github.com/najahiiii/AnyKernel.git -b asus AnyKernel
+git clone -j32 https://github.com/najahiiii/AnyKernel3.git -b asus AnyKernel
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
 GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
@@ -73,7 +73,7 @@ function compile() {
 # Zipping
 function zipping() {
         cd AnyKernel
-        zip -r9 ChipsKernel-Pie-EAS-${tanggal}.zip *
+        zip -r9 ChipsKernel-Pie-EAS-${tanggal}.zip * -x .git README.md
         cd ..
 }
 sticker
