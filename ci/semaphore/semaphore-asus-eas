@@ -75,7 +75,7 @@ function compile() {
 # Zipping
 function zipping() {
         cd AnyKernel
-        zip -r9 ChipsKernel-Pie-EAS-${tanggal}.zip * -x .git README.md
+        zip -r9 ChipsKernel-EAS-${tanggal}.zip * -x .git README.md
         cd ..
 }
 sticker
