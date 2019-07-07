@@ -1,14 +1,12 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Cloning dependencies"
-git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
-git clone --depth 1 -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-32-mirror gcc32
-git clone --depth 1 -j32 https://github.com/NusantaraDevs/DragonTC.git -b 9.0 clang
+git clone --depth 1 -j32 https://github.com/najahiiii/priv-toolchains.git -b arm64 gcc
+git clone --depth 1 -j32 https://github.com/najahiiii/priv-toolchains.git -b arm gcc32
 git clone -j32 https://github.com/najahiiii/AnyKernel3.git -b asus AnyKernel
 echo "Done"
-GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
-GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
-CT="$(pwd)/clang/bin/clang"
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
+GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
@@ -26,7 +24,7 @@ function sendinfo() {
                         -d chat_id=$chat_id \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
-                        -d text="<b>ChipsKernel CAF EAS</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #Nightly"
+                        -d text="<b>ChipsKernel CAF EAS</b> new build is up%0AStarted on <code>SemaphoreCI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>SemaphoreCI Status</b> <a href='https://ngntdkernel.semaphoreci.com/workflows/${SEMAPHORE_WORKFLOW_ID}'>here</a>%0A<b>Build Status:</b> #Nightly"
 }
 # Send private info
 function sendpriv() {
@@ -64,7 +62,7 @@ function finerr() {
 # Compile plox
 function compile() {
         make -s -C $(pwd) O=out X00T_defconfig
-        make -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} CLANG_TRIPLE=aarch64-linux-gnu- O=out -j32 -l32 2>&1| tee build.log
+        make -C $(pwd) CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} O=out -j32 -l32 2>&1| tee build.log
             if ! [ -a $IMAGE ]; then
                 finerr
                 exit 1
