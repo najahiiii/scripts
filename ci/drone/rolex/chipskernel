@@ -1,9 +1,9 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Cloning dependencies"
-git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 -j32 --depth=1 gcc
+git clone https://github.com/kdrag0n/aarch64-elf-gcc -b 9.x --depth=1 gcc
 echo "Done"
-GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
