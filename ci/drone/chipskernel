@@ -72,25 +72,21 @@ function compile() {
 	paste
 }
 # Zipping
-function rel_zipping() {
+function zipping() {
         cd AnyKernel
-        zip -r9 ChipsKernel-EAS-${tanggal}.zip * -x .git README.md
-        cd ..
-}
-# Zipping
-function test_zipping() {
-        cd AnyKernel
-        zip -r9 ChipsKernel-EAS-Alpha-${tdate}.zip * -x .git README.md
+        if [ $is_test = true ]
+        then
+            zip -r9 ChipsKernel-EAS-Alpha-${tdate}.zip * -x .git README.md
+        else
+            zip -r9 ChipsKernel-EAS-${tanggal}.zip * -x .git README.md
+        fi #ngentod
         cd ..
 }
 sticker
 sendpriv
 sendinfo
 compile
-if $is_test == true; then
-    test_zipping
-fi
-    rel_zipping
+zipping
 END=$(date +"%s")
 DIFF=$(($END - $START))
 push
