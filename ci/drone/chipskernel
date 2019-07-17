@@ -8,7 +8,6 @@ echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-elf-"
 GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
-tdate=$(TZ=Asia/Jakarta date +'%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
@@ -77,7 +76,7 @@ function zipping() {
         cd AnyKernel
         if [ $is_test = true ]
         then
-            zip -r9 ChipsKernel-EAS-Alpha-${tdate}.zip * -x .git README.md
+            zip -r9 ChipsKernel-EAS-Alpha-${tanggal}.zip * -x .git README.md
         else
             zip -r9 ChipsKernel-EAS-${tanggal}.zip * -x .git README.md
         fi #ngentod
