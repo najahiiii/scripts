@@ -1,7 +1,7 @@
 #!bin/bash
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 echo "Cloning dependencies"
-git clone https://github.com/kdrag0n/aarch64-elf-gcc -b 9.x --depth=1 gcc
+git clone https://github.com/najahiiii/priv-toolchains -b arm64 --depth=1 gcc
 git clone https://github.com/kdrag0n/arm-eabi-gcc -b 9.x --depth=1 gcc32
 git clone -j32 https://github.com/najahiiii/AnyKernel3.git -b asus AnyKernel
 echo "Done"
@@ -46,6 +46,7 @@ function push() {
 			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <a href='${HASIL}'>Logs</a>"
 }
 # Function upload logs to my own server paste
+
 function paste() {
         cat build.log | curl -F 'chips=<-' https://chipslogs.herokuapp.com > link
         HASIL="$(cat link)"
