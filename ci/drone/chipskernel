@@ -6,7 +6,7 @@ git clone https://github.com/najahiiii/priv-toolchains -b arm64 --depth=1 gcc
 git clone -j32 https://github.com/najahiiii/AnyKernel3.git -b asus AnyKernel
 echo "Done"
 GCC="$(pwd)/gcc/bin/aarch64-chips-elf-"
-GCC32="$(pwd)/gcc32/bin/arm-eabi-"
+GCC32="$(pwd)/gcc32/bin/arm-chips-eabi-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
