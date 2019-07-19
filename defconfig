@@ -9,14 +9,15 @@ CT_EXTRA_CFLAGS_FOR_HOST="-mtune=native -march=native"
 CT_LOG_INFO=y
 # CT_LOG_PROGRESS_BAR is not set
 CT_ARCH_ARM=y
-CT_ARCH_64=y
+CT_ARCH_32=y
 CT_STATIC_TOOLCHAIN=y
 # CT_SHOW_CT_VERSION is not set
 CT_BINUTILS_RELRO=y
 CT_GCC_SRC_DEVEL=y
 CT_GCC_DEVEL_VCS_git=y
-CT_GCC_DEVEL_URL="git://gcc.gnu.org/git/gcc.git"
+CT_GCC_DEVEL_URL="https://github.com/gcc-mirror/gcc.git"
+CT_GCC_DEVEL_BRANCH="refs/heads/gcc-9-branch"
 CT_TARGET_VENDOR="chips"
 CT_GETTEXT_NEEDED=y
-CT_PARALLEL_JOBS=24
-CT_LOAD="24"
+CT_PARALLEL_JOBS=32
+CT_LOAD="32"
