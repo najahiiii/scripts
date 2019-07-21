@@ -5,6 +5,15 @@ git clone https://github.com/najahiiii/priv-toolchains -b arm --depth=1 gcc32
 git clone https://github.com/najahiiii/priv-toolchains -b arm64 --depth=1 gcc
 git clone -j32 https://github.com/najahiiii/AnyKernel3.git -b asus AnyKernel
 echo "Done"
+if [ "$is_test" = true ]; then
+     echo "Its alpha test build"
+     unset chat_id
+     unset token
+     export chat_id=${my_id}
+     export token=${nToken}
+else
+     echo "Its beta release build"
+fi
 GCC="$(pwd)/gcc/bin/aarch64-chips-elf-"
 GCC32="$(pwd)/gcc32/bin/arm-chips-eabi-"
 tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
@@ -21,7 +30,7 @@ function sticker() {
 # Send info plox channel
 function sendinfo() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
-                        -d chat_id=$chat_id \
+                        -d chat_id="$chat_id" \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
                         -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #Nightly"
@@ -29,14 +38,14 @@ function sendinfo() {
 # Send private info
 function sendpriv() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
-                        -d chat_id=$priv_id \
+                        -d chat_id="$priv_id" \
                         -d "disable_web_page_preview=true" \
                         -d "parse_mode=html" \
                         -d text="ChipsKernel CI Started%0ADrone triggered by: <code>${DRONE_BUILD_EVENT}</code> event%0AJob name: Chips%0ACommit point: <a href='${DRONE_COMMIT_LINK}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://cloud.drone.io/najahiiii/kernel_asus_sdm660/${DRONE_BUILD_NUMBER}'>here</a>"
 }
 # Push kernel to channel
 function push() {
-        cd AnyKernel
+        cd AnyKernel || exit 1
 	ZIP=$(echo *.zip)
 	curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
 			-F chat_id="$chat_id" \
@@ -45,7 +54,6 @@ function push() {
 			-F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <a href='${HASIL}'>Logs</a>"
 }
 # Function upload logs to my own server paste
-
 function paste() {
         cat build.log | curl -F 'chips=<-' https://chipslogs.herokuapp.com > link
         HASIL="$(cat link)"
@@ -63,8 +71,8 @@ function finerr() {
 # Compile plox
 function compile() {
         make -s -C $(pwd) O=out X00T_defconfig
-        make -C $(pwd) CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} O=out -j32 -l32 2>&1| tee build.log
-            if ! [ -a $IMAGE ]; then
+        make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j32 -l32 2>&1| tee build.log
+            if ! [ -a "$IMAGE" ]; then
                 finerr
                 exit 1
             fi
@@ -73,14 +81,12 @@ function compile() {
 }
 # Zipping
 function zipping() {
-        cd AnyKernel
-        if [ $is_test = true ]
-        then
-            zip -r9 ChipsKernel-EAS-Alpha-${tanggal}.zip * -x .git README.md
+        cd AnyKernel || exit 1
+        if [ "$is_test" = true ]; then
+            zip -r9 ChipsKernel-EAS-Alpha-"${tanggal}".zip * -x .git README.md
         else
-            zip -r9 ChipsKernel-EAS-${tanggal}.zip * -x .git README.md
+            zip -r9 ChipsKernel-EAS-"${tanggal}".zip * -x .git README.md
         fi #ngentod
-        cd ..
 }
 sticker
 sendpriv
