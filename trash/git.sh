@@ -35,8 +35,8 @@ echo -e "${CLR_BLD_RED}                                        ░      ${CLR_RS
 echo -e ""
 echo -e "${CLR_BLD_BLU}Setting-up Users info...${CLR_RST}"
 echo -e ""
-git config --global user.email "tlogitechnjhi@gmail.com"
-git config --global user.name "najahiiii"
+git config --global user.email "najahiii@outlook.co.id"
+git config --global user.name "Najahiiii"
 echo -e "${CLR_BLD_YLW}Setting-up git global config...${CLR_RST}"
 echo -e ""
 git config --global alias.cp 'cherry-pick'
