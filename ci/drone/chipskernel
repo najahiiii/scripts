@@ -51,7 +51,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <a href='${HASIL}'>Logs</a>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -60,12 +60,11 @@ function paste() {
 }
 # Fin Error
 function finerr() {
-    paste
     curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
         -d chat_id="$chat_id" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=markdown" \
-        -d text="Job Baking Chips throw an error(s) | **Build logs** [here](${HASIL})"
+        -d text="Job Baking Chips throw an error(s)"
     exit 1
 }
 # Compile plox
@@ -77,7 +76,6 @@ function compile() {
             exit 1
         fi
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
-    paste
 }
 # Zipping
 function zipping() {
