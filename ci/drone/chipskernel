@@ -15,6 +15,7 @@ else
 fi
 GCC="$(pwd)/gcc/bin/aarch64-chips-elf-"
 GCC32="$(pwd)/gcc32/bin/arm-chips-eabi-"
+SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 TANGGAL=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
 START=$(date +"%s")
@@ -81,9 +82,9 @@ function compile() {
 function zipping() {
     cd AnyKernel || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-EAS-Alpha-"${TANGGAL}".zip * -x .git README.md
+        zip -r9 ChipsKernel-EAS-Alpha-"${SHA}".zip * -x .git README.md
     else
-        zip -r9 ChipsKernel-EAS-"${TANGGAL}".zip * -x .git README.md
+        zip -r9 ChipsKernel-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md
     fi #ngentod
     cd .. #well
 }
