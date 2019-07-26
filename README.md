@@ -7,4 +7,6 @@
 
 -----------------------------------------------------------------------
 
-* What r u doing bitch
+* ChipsKernelCI: [![Build Status](https://cloud.drone.io/api/badges/najahiiii/kernel_asus_sdm660/status.svg)](https://cloud.drone.io/najahiiii/kernel_asus_sdm660)
+* Priv-ToolchainsCI: [![Build Status](https://cloud.drone.io/api/badges/najahiiii/priv-toolchains/status.svg)](https://cloud.drone.io/najahiiii/priv-toolchains)
+
