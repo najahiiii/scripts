@@ -13,8 +13,8 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
-GCC="$(pwd)/gcc/bin/aarch64-chips-elf-"
-GCC32="$(pwd)/gcc32/bin/arm-chips-eabi-"
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
+GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 TANGGAL=$(date +'%H%M-%d%m%y')
@@ -34,7 +34,7 @@ function sendinfo() {
         -d chat_id="$chat_id" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=html" \
-        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>Build Status:</b> #Nightly"
+        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #Nightly"
 }
 # Send private info
 function sendpriv() {
@@ -71,7 +71,7 @@ function finerr() {
 # Compile plox
 function compile() {
     make -s -C $(pwd) -j48 O=out X00T_defconfig
-    make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j48 -l48 2>&1| tee build.log
+    make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j60 -l50 2>&1| tee build.log
         if ! [ -a "$IMAGE" ]; then
             finerr
             exit 1
