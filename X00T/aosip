@@ -1,0 +1,4 @@
+#!bin/bash
+git clone git@github.com:najahiiii/device_asus_X00T.git -b aosip-pizza device/asus/X00T
+git clone git@github.com:najahiiii/proprietary_vendor_asus.git -b aosip-pizza vendor/asus/
+git clone git@github.com:najahiiii/kernel_asus_sdm660.git --depth=1 kernel/asus/sdm660

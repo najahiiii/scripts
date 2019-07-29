@@ -1,0 +1,8 @@
+#!bin/bash
+echo "Cloning Device tree"
+git clone https://github.com/najahiiii/device_asus_X00T.git -b komodo-pie -q device/asus/X00T
+echo "Cloning Proprietary vendor"
+git clone https://github.com/najahiiii/proprietary_vendor_asus.git -b komodo-pie -q vendor/asus/
+echo "Cloning Kernel source"
+git clone https://github.com/najahiiii/kernel_asus_sdm660.git --depth=1 -q kernel/asus/sdm660
+echo "Done"
