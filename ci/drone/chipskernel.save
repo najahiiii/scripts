@@ -1,8 +1,6 @@
 #!bin/bash
 echo "Cloning dependencies"
-wget -q https://github.com/kdrag0n/proton-clang-build/releases/download/20190728/proton_clang-20190728-45d910de.tar.zst
-tar -I zstd -xf proton_clang-20190728-45d910de.tar.zst
-mv proton_clang-20190728-45d910de toolchain
+
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -14,6 +12,8 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
+GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 TANGGAL=$(date +'%H%M-%d%m%y')
@@ -21,7 +21,6 @@ START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
-export LD_LIBRARY_PATH="$(pwd)/toolchain/bin/../lib:$PATH"
 # sticker plox
 function sticker() {
     curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
@@ -30,12 +29,11 @@ function sticker() {
 }
 # Send info plox channel
 function sendinfo() {
-    PATH="$(pwd)/toolchain/bin:${PATH}"
     curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
         -d chat_id="$chat_id" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=html" \
-        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #Nightly"
+        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #Nightly"
 }
 # Send private info
 function sendpriv() {
@@ -72,17 +70,11 @@ function finerr() {
 # Compile plox
 function compile() {
     make -s -C $(pwd) -j48 O=out X00T_defconfig
-    PATH="$(pwd)/toolchain/bin:${PATH}" \
-    make -j48 -l48 O=out \
-                   ARCH=arm64 \
-                   CC=clang \
-                   CLANG_TRIPLE=aarch64-linux-gnu- \
-                   CROSS_COMPILE=aarch64-linux-gnu- \
-                   CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-    if ! [ -a "$IMAGE" ]; then
-        finerr
-        exit 1
-    fi
+    make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j60 -l50 2>&1| tee build.log
+        if ! [ -a "$IMAGE" ]; then
+            finerr
+            exit 1
+        fi
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
 }
 # Zipping
