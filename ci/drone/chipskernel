@@ -1,8 +1,9 @@
 #!bin/bash
 echo "Cloning dependencies"
-wget -q https://github.com/kdrag0n/proton-clang-build/releases/download/20190802/proton_clang-20190802-b874b3d3.tar.zst
-tar -I zstd -xf proton_clang-20190802-b874b3d3.tar.zst
-mv proton_clang-20190802-b874b3d3 toolchain
+wget -q https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst
+tar -I zstd -xf proton_clang-latest.tar.zst
+rm proton_clang-latest.tar.zst
+mv proton_clang-* toolchain || exit 1
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
