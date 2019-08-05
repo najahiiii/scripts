@@ -1,4 +1,4 @@
-#!bin/bash
+#!/usr/bin/env bash
 echo "Cloning dependencies"
 wget -q https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst
 tar -I zstd -xf proton_clang-latest.tar.zst
