@@ -81,6 +81,7 @@ function compile() {
 # Zipping
 function zipping() {
     cd AnyKernel || exit 1
+    rm *.zip
     if [ "$is_test" = true ]; then
         zip -r9 ChipsKernel-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     else
