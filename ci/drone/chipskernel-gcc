@@ -52,7 +52,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -82,14 +82,13 @@ function compile() {
 function zipping() {
     cd AnyKernel || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md
+        zip -r9 ChipsKernel-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     else
-        zip -r9 ChipsKernel-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md
+        zip -r9 ChipsKernel-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     fi #ngentod
     cd .. #well
 }
-sticker
-sendinfo
+rm -rf out
 compile
 zipping
 END=$(date +"%s")

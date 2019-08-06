@@ -48,13 +48,14 @@ function sendpriv() {
 }
 # Push kernel to channel
 function push() {
+    PATH="$(pwd)/toolchain/bin:${PATH}"
     cd AnyKernel || exit 1
     ZIP=$(echo *.zip)
     curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
