@@ -24,6 +24,7 @@ START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
+export LD_LIBRARY_PATH="$(pwd)/clang/lib64:$PATH"
 # sticker plox
 function sticker() {
     curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
@@ -73,11 +74,18 @@ function finerr() {
 # Compile plox
 function compile() {
     make -s -C $(pwd) -j48 O=out X00T_defconfig
-    make -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} CLANG_TRIPLE=aarch64-linux-gnu- O=out -j60 -l50 2>&1| tee build.log
-        if ! [ -a "$IMAGE" ]; then
-            finerr
-            exit 1
-        fi
+    PATH="$(pwd)/clang/bin:${PATH}" \
+    make -C $(pwd) CC=${CT} \
+            CROSS_COMPILE=${GCC} \
+            CROSS_COMPILE_ARM32=${GCC32} \
+            CLANG_TRIPLE=aarch64-linux-gnu- \
+            O=out \
+            -j60 \
+            -l50 2>&1| tee build.log
+            if ! [ -a "$IMAGE" ]; then
+                finerr
+                exit 1
+            fi
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
 }
 # Zipping
