@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
 git clone -q -j32 https://github.com/NusantaraDevs/DragonTC.git --depth=1 -b 10.0 clang
-git clone -q -j32 https://github.com/najahiiii/aarch64-linux-gnu.git --depth=1 -b 4.9-mirror gcc
-git clone -q -j32 https://github.com/najahiiii/aarch64-linux-gnu.git --depth=1 -b 4.9-32-mirror gcc32
+git clone -q -j32 https://github.com/najahiiii/priv-toolchains.git --depth=1 -b non-elf/arm gcc32
+git clone -q -j32 https://github.com/najahiiii/priv-toolchains.git --depth=1 -b non-elf/arm64 gcc
 git clone -q -j32 https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -14,8 +14,8 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
-GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
-GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
+GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
+GCC32="$(pwd)/gcc32/bin/arm-linux-gnueabi-"
 CT="$(pwd)/clang/bin/clang"
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
