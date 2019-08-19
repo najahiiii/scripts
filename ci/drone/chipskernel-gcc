@@ -86,9 +86,9 @@ function zipping() {
     cd AnyKernel || exit 1
     rm *.zip
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-GCC-9-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     else
-        zip -r9 ChipsKernel-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-GCC-9-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     fi #ngentod
     cd .. #well
 }

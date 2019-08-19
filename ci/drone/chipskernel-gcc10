@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
+echo "Nuke previous toolchains"
+rm -rf gcc*
+echo "cleaned up"
 echo "Cloning dependencies"
-git clone -q -j32 https://github.com/NusantaraDevs/DragonTC.git --depth=1 -b 10.0 clang
-git clone -q -j32 https://github.com/najahiiii/priv-toolchains.git --depth=1 -b non-elf/arm gcc32
-git clone -q -j32 https://github.com/najahiiii/priv-toolchains.git --depth=1 -b non-elf/arm64 gcc
-git clone -q -j32 https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
+git clone https://github.com/najahiiii/priv-toolchains -b arm --depth=1 gcc32
+git clone https://github.com/najahiiii/priv-toolchains -b arm64 --depth=1 gcc
+git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -14,9 +16,8 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
-GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
-GCC32="$(pwd)/gcc32/bin/arm-linux-gnueabi-"
-CT="$(pwd)/clang/bin/clang"
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
+GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 TANGGAL=$(date +'%H%M-%d%m%y')
@@ -24,7 +25,6 @@ START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
-export LD_LIBRARY_PATH="$(pwd)/clang/lib64:$PATH"
 # sticker plox
 function sticker() {
     curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
@@ -37,7 +37,7 @@ function sendinfo() {
         -d chat_id="$chat_id" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=html" \
-        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #Nightly"
+        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #Nightly"
 }
 # Send private info
 function sendpriv() {
@@ -55,7 +55,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(${CT} --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -74,18 +74,11 @@ function finerr() {
 # Compile plox
 function compile() {
     make -s -C $(pwd) -j48 O=out X00T_defconfig
-    PATH="$(pwd)/clang/bin:${PATH}" \
-    make -C $(pwd) CC=${CT} \
-            CROSS_COMPILE=${GCC} \
-            CROSS_COMPILE_ARM32=${GCC32} \
-            CLANG_TRIPLE=aarch64-linux-gnu- \
-            O=out \
-            -j60 \
-            -l50 2>&1| tee build.log
-            if ! [ -a "$IMAGE" ]; then
-                finerr
-                exit 1
-            fi
+    make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j60 -l50 2>&1| tee build.log
+        if ! [ -a "$IMAGE" ]; then
+            finerr
+            exit 1
+        fi
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
 }
 # Zipping
@@ -93,14 +86,13 @@ function zipping() {
     cd AnyKernel || exit 1
     rm *.zip
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-DragonTC-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-GCC-10-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     else
-        zip -r9 ChipsKernel-DragonTC-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-GCC-10-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     fi #ngentod
     cd .. #well
 }
-sticker
-sendinfo
+rm -rf out
 compile
 zipping
 END=$(date +"%s")
