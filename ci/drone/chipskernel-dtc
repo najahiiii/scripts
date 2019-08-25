@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
-git clone -q -j32 https://github.com/NusantaraDevs/DragonTC.git --depth=1 -b 10.0 clang
+git clone -q -j32 https://github.com/NusantaraDevs/clang.git --depth=1 -b 10.0 clang
 git clone -q -j32 https://github.com/najahiiii/priv-toolchains.git --depth=1 -b non-elf/gcc-10.0.0/arm gcc32
 git clone -q -j32 https://github.com/najahiiii/priv-toolchains.git --depth=1 -b non-elf/gcc-10.0.0/arm64 gcc
 git clone -q -j32 https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
@@ -93,9 +93,9 @@ function zipping() {
     cd AnyKernel || exit 1
     rm *.zip
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-DragonTC-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-NusantaraDevsTC-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     else
-        zip -r9 ChipsKernel-DragonTC-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-NusantaraDevsTC-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     fi #ngentod
     cd .. #well
 }
