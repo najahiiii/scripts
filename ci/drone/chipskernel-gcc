@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Nuke previous toolchains"
-rm -rf gcc*
+rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning dependencies"
 git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-9.2.0/arm --depth=1 gcc32
@@ -84,11 +84,10 @@ function compile() {
 # Zipping
 function zipping() {
     cd AnyKernel || exit 1
-    rm *.zip
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-GCC-9-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-GCC-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     else
-        zip -r9 ChipsKernel-GCC-9-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
+        zip -r9 ChipsKernel-GCC-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md *.zip
     fi #ngentod
     cd .. #well
 }

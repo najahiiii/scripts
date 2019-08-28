@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
-wget -q https://kdrag0n.dev/files/redirector/proton_clang-latest.tar.zst
-tar -I zstd -xf proton_clang-latest.tar.zst
-rm proton_clang-latest.tar.zst
-mv proton_clang-* toolchain || exit 1
+git clone https://github.com/NusantaraDevs/clang.git --depth=1 toolchain
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -55,7 +52,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Function upload logs to my own server paste
 function paste() {
@@ -91,9 +88,9 @@ function compile() {
 function zipping() {
     cd AnyKernel || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md
+        zip -r9 ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md
     else
-        zip -r9 ChipsKernel-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md
+        zip -r9 ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md
     fi #ngentod
     cd .. #well
 }
