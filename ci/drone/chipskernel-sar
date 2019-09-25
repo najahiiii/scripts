@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-echo "Nuke previous toolchains"
-rm -rf toolchain out AnyKernel
+echo "Nuke previous AnyKernel"
+rm -rf AnyKernel
 echo "cleaned up"
 echo "Cloning dependencies"
-git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm --depth=1 gcc32
-git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm64 --depth=1 gcc
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus-ten --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -29,10 +27,11 @@ git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Patch for sar
 function patch() {
-    curl https://github.com/najahiiii/kernel_asus_sdm660/commit/363726eb22f68f491a07e8ca510c9d542601d42f.patch | git am
-    curl https://github.com/najahiiii/kernel_asus_sdm660/commit/59a43d7a80a70f024310e361f1fac41f2b1b1b68.patch | git am
-    curl https://github.com/najahiiii/kernel_asus_sdm660/commit/37f0e91960a4ed544ef84fbef26248a1e41ece05.patch | git am
-    curl https://github.com/najahiiii/kernel_asus_sdm660/commit/2e3d1ed85d39ff088f39f3cbadab26d4739bb23d.patch | git am
+    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/363726eb22f68f491a07e8ca510c9d542601d42f.patch | git am
+    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/59a43d7a80a70f024310e361f1fac41f2b1b1b68.patch | git am
+    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/37f0e91960a4ed544ef84fbef26248a1e41ece05.patch | git am
+    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/2e3d1ed85d39ff088f39f3cbadab26d4739bb23d.patch | git am
+    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/4c93283d616c29656bd61eee8156fd7facfba926.patch | git am
 }
 # sticker plox
 function sticker() {
