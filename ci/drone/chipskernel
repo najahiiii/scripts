@@ -15,6 +15,8 @@ fi
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 TANGGAL=$(date +'%H%M-%d%m%y')
+JOBS=$(nproc)
+LOADS=$(nproc)
 START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
@@ -70,9 +72,9 @@ function finerr() {
 }
 # Compile plox
 function compile() {
-    make -s -C $(pwd) -j48 O=out X00T_defconfig
+    make -s -C $(pwd) -j$JOBS O=out X00T_defconfig
     PATH="$(pwd)/toolchain/bin:${PATH}" \
-    make -j48 -l48 O=out \
+    make -j$JOBS -l$LOADS O=out \
                    ARCH=arm64 \
                    CC=clang \
                    CLANG_TRIPLE=aarch64-linux-gnu- \
