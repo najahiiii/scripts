@@ -1,0 +1,26 @@
+#!bin/bash
+if [ "$is_test" = true ]; then
+     echo "Its alpha test build"
+     unset chat_id
+     unset token
+     export chat_id=${my_id}
+     export token=${nToken}
+else
+     echo "Its beta release build"
+fi
+# sticker plox
+function sticker() {
+        curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
+                        -d sticker="CAADBQADKwEAAkMQsyJtEJHSjxmH-wI" \
+                        -d chat_id=$chat_id
+}
+# Send info plox
+function sendinfo() {
+        curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+                        -d chat_id=$chat_id \
+                        -d "disable_web_page_preview=true" \
+                        -d "parse_mode=html" \
+                        -d text="<b>ChipsKernel CAF EAS</b> new build is up%0AStarted on <code>Circle CI</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D) Android 9.0/Pie - 10.0/Q%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AStarted on <code>$(TZ=Asia/Jakarta date)</code>%0A<b>CI Information:</b> <a href='${CIRCLE_BUILD_URL}'>here</a>%0A<b>Build Status:</b> #Nightly"
+}
+sticker
+sendinfo

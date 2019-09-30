@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-echo "Nuke previous AnyKernel"
-rm -rf AnyKernel toolchain
-echo "cleaned up"
 echo "Cloning dependencies"
 git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm --depth=1 gcc32
 git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm64 --depth=1 gcc
@@ -19,6 +16,7 @@ fi
 GCC="$(pwd)/gcc/bin/aarch64-elf-"
 GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+SHA=$(echo $CIRCLE_SHA1 | cut -c 1-8)
 TANGGAL=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
@@ -34,28 +32,6 @@ function patch() {
     curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/2e3d1ed85d39ff088f39f3cbadab26d4739bb23d.patch | git am
     curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/4c93283d616c29656bd61eee8156fd7facfba926.patch | git am
 }
-# sticker plox
-function sticker() {
-    curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
-        -d sticker="CAADBQADKwEAAkMQsyJtEJHSjxmH-wI" \
-        -d chat_id=$chat_id
-}
-# Send info plox channel
-function sendinfo() {
-    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
-        -d chat_id="$chat_id" \
-        -d "disable_web_page_preview=true" \
-        -d "parse_mode=html" \
-        -d text="<b>ChipsKernel CAF EAS</b> CI Triggered%0ABuild started on <code>Drone CI/CD</code>%0AFor device <b>Asus Max Pro M1</b> (X00T/D)%0Abranch <code>$(git rev-parse --abbrev-ref HEAD)</code> (Android 9.0/Pie)%0AUnder commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>%0AUsing compiler: <code>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</code>%0AStarted on <code>$(date)</code>%0A<b>Build Status:</b> #Nightly"
-}
-# Send private info
-function sendpriv() {
-    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
-        -d chat_id="$priv_id" \
-        -d "disable_web_page_preview=true" \
-        -d "parse_mode=html" \
-        -d text="ChipsKernel CI Started%0ADrone triggered by: <code>${DRONE_BUILD_EVENT}</code> event%0AJob name: Chips%0ACommit point: <a href='${DRONE_COMMIT_LINK}'>$(git log --pretty=format:'"%h : %s"' -1)</a>%0A<b>Pipeline jobs</b> <a href='https://cloud.drone.io/najahiiii/kernel_asus_sdm660/${DRONE_BUILD_NUMBER}'>here</a>"
-}
 # Push kernel to channel
 function push() {
     cd AnyKernel || exit 1
@@ -64,12 +40,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D)</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
-}
-# Function upload logs to my own server paste
-function paste() {
-    cat build.log | curl -F 'chips=<-' https://chipslogs.herokuapp.com > link
-    HASIL="$(cat link)"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 10.0</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Fin Error
 function finerr() {
@@ -83,7 +54,9 @@ function finerr() {
 # Compile plox
 function compile() {
     make -s -C $(pwd) -j$(nproc) O=out X00T_defconfig
-    make -C $(pwd) CROSS_COMPILE="${GCC}" CROSS_COMPILE_ARM32="${GCC32}" O=out -j$(nproc) -l$(nproc) 2>&1| tee build.log
+    make -C $(pwd) O=out -j$(nproc) \
+        CROSS_COMPILE="${GCC}" \
+        CROSS_COMPILE_ARM32="${GCC32}"
         if ! [ -a "$IMAGE" ]; then
             finerr
             exit 1
@@ -94,9 +67,9 @@ function compile() {
 function zipping() {
     cd AnyKernel || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-SAR-GCC-EAS-Alpha-"${TANGGAL}".zip * -x .git LICENCE README.md *.zip
+        zip -r9 ChipsKernel-SAR-GCC-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git LICENCE README.md *.zip
     else
-        zip -r9 ChipsKernel-SAR-GCC-EAS-"${TANGGAL}".zip * -x .git LICENCE README.md *.zip
+        zip -r9 ChipsKernel-SAR-GCC-EAS-"${TANGGAL}-${SHA}".zip * -x .git LICENCE README.md *.zip
     fi #ngentod
     cd .. #well
 }

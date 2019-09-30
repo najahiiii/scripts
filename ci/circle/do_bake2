@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+echo "Cloning dependencies"
+git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm --depth=1 gcc32
+git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm64 --depth=1 gcc
+git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
+echo "Done"
+if [ "$is_test" = true ]; then
+     echo "Its alpha test build"
+     unset chat_id
+     unset token
+     export chat_id=${my_id}
+     export token=${nToken}
+else
+     echo "Its beta release build"
+fi
+GCC="$(pwd)/gcc/bin/aarch64-elf-"
+GCC32="$(pwd)/gcc32/bin/arm-eabi-"
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+SHA=$(echo $CIRCLE_SHA1 | cut -c 1-8)
+TANGGAL=$(date +'%H%M-%d%m%y')
+START=$(date +"%s")
+export ARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export KBUILD_BUILD_HOST=NusantaraDevs
+# Push kernel to channel
+function push() {
+    cd AnyKernel || exit 1
+    ZIP=$(echo *.zip)
+    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 9.0</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed  -e 's/  */ /g')</b>"
+}
+# Fin Error
+function finerr() {
+    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+        -d chat_id="$chat_id" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d text="Job Baking Chips throw an error(s)"
+    exit 1
+}
+# Compile plox
+function compile() {
+    make -s -C $(pwd) -j$(nproc) O=out X00T_defconfig
+    make -j$(nproc) O=out \
+                   CROSS_COMPILE="${GCC}" \
+                   CROSS_COMPILE_ARM32="${GCC32}"
+    if ! [ -a "$IMAGE" ]; then
+        finerr
+        exit 1
+    fi
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+}
+# Zipping
+function zipping() {
+    cd AnyKernel || exit 1
+    if [ "$is_test" = true ]; then
+        zip -r9 ChipsKernel-GCC-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x .git README.md
+    else
+        zip -r9 ChipsKernel-GCC-EAS-"${TANGGAL}-${SHA}".zip * -x .git README.md
+    fi #ngentod
+    cd .. #well
+}
+compile
+zipping
+END=$(date +"%s")
+DIFF=$(($END - $START))
+push
