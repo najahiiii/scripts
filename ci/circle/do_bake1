@@ -12,7 +12,7 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
-SHA=$(echo $CIRCLE_SHA1 | cut -c 1-8)
+SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 TANGGAL=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
@@ -24,12 +24,12 @@ export LD_LIBRARY_PATH="$(pwd)/toolchain/bin/../lib:$PATH"
 function push() {
     PATH="$(pwd)/toolchain/bin:${PATH}"
     cd AnyKernel || exit 1
-    ZIP=$(echo *.zip)
-    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
+    ZIP=$(echo ./*.zip)
+    curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 9.0</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $($DIFF / 60) minute(s) and $($DIFF % 60) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 9.0</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Fin Error
 function finerr() {
@@ -42,9 +42,9 @@ function finerr() {
 }
 # Compile plox
 function compile() {
-    make -s -C $(pwd) -j$(nproc) O=out X00T_defconfig
+    make -s -C "$(pwd)" -j"$(nproc)" O=out X00T_defconfig
     PATH="$(pwd)/toolchain/bin:${PATH}" \
-    make -C $(pwd) -j$(nproc) O=out \
+    make -C "$(pwd)" -j"$(nproc)" O=out \
                    ARCH=arm64 \
                    CC=clang \
                    CLANG_TRIPLE=aarch64-linux-gnu- \
@@ -60,14 +60,14 @@ function compile() {
 function zipping() {
     cd AnyKernel || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x LICENCE README.md
+        zip -r9 ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip ./* -x LICENCE README.md
     else
-        zip -r9 ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip * -x LICENCE README.md
+        zip -r9 ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip ./* -x LICENCE README.md
     fi #ngentod
     cd .. #well
 }
 compile
 zipping
 END=$(date +"%s")
-DIFF=$(($END - $START))
+DIFF=$($END - "$START")
 push
