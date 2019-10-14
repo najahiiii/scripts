@@ -16,7 +16,7 @@ fi
 GCC="$(pwd)/gcc/bin/aarch64-elf-"
 GCC32="$(pwd)/gcc32/bin/arm-eabi-"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
-SHA=$(echo $CIRCLE_SHA1 | cut -c 1-8)
+SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 TANGGAL=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 export ARCH=arm64
@@ -36,7 +36,7 @@ function patch() {
 function push() {
     cd AnyKernel || exit 1
     ZIP=$(echo *.zip)
-    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
+    curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
@@ -53,8 +53,8 @@ function finerr() {
 }
 # Compile plox
 function compile() {
-    make -s -C $(pwd) -j$(nproc) O=out X00T_defconfig
-    make -C $(pwd) O=out -j$(nproc) \
+    make -s -C "$(pwd)" -j"$(nproc)" O=out X00T_defconfig
+    make -C "$(pwd)" O=out -j$(nproc) \
         CROSS_COMPILE="${GCC}" \
         CROSS_COMPILE_ARM32="${GCC32}"
         if ! [ -a "$IMAGE" ]; then

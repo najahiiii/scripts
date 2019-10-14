@@ -24,12 +24,12 @@ export LD_LIBRARY_PATH="$(pwd)/toolchain/bin/../lib:$PATH"
 function push() {
     PATH="$(pwd)/toolchain/bin:${PATH}"
     cd AnyKernel || exit 1
-    ZIP=$(echo ./*.zip)
+    ZIP=$(echo *.zip)
     curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $($DIFF / 60) minute(s) and $($DIFF % 60) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 9.0</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 9.0</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Fin Error
 function finerr() {
@@ -60,14 +60,14 @@ function compile() {
 function zipping() {
     cd AnyKernel || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip ./* -x LICENCE README.md
+        zip -r9 ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x LICENCE README.md
     else
-        zip -r9 ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip ./* -x LICENCE README.md
+        zip -r9 ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip * -x LICENCE README.md
     fi #ngentod
     cd .. #well
 }
 compile
 zipping
 END=$(date +"%s")
-DIFF=$($END - "$START")
+DIFF=$(($END - $START))
 push
