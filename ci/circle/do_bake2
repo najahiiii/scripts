@@ -30,7 +30,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 9.0</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed  -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 10.0</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed  -e 's/  */ /g')</b>"
 }
 # Fin Error
 function finerr() {
