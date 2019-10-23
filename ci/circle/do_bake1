@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
-git clone https://github.com/NusantaraDevs/clang.git --depth=1 -b dev/10.0 toolchain
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -9,6 +8,7 @@ if [ "$is_test" = true ]; then
      unset token
      export chat_id=${my_id}
      export token=${nToken}
+     export YEET=-Alpha
 else
      echo "Its beta release build"
 fi
@@ -19,10 +19,10 @@ START=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
-export LD_LIBRARY_PATH="$(pwd)/toolchain/bin/../lib:$PATH"
+export LD_LIBRARY_PATH="/root/clang/bin/../lib:$PATH"
 # Push kernel to channel
 function push() {
-    PATH="$(pwd)/toolchain/bin:${PATH}"
+    PATH="/root/clang/bin:${PATH}"
     cd AnyKernel || exit 1
     ZIP=$(echo *.zip)
     curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
@@ -43,7 +43,7 @@ function finerr() {
 # Compile plox
 function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out X00T_defconfig
-    PATH="$(pwd)/toolchain/bin:${PATH}" \
+    PATH="/root/clang/bin:${PATH}" \
     make -C "$(pwd)" -j"$(nproc)" O=out \
                    ARCH=arm64 \
                    CC=clang \

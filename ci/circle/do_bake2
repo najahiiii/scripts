@@ -10,6 +10,7 @@ if [ "$is_test" = true ]; then
      unset token
      export chat_id=${my_id}
      export token=${nToken}
+     export YEET=-Alpha
 else
      echo "Its beta release build"
 fi
