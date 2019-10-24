@@ -66,7 +66,7 @@ function compile() {
 # Zipping
 function zipping() {
     cd AnyKernel || exit 1
-    zip -r9 unsigned.zip * -x LICENCE README.md
+    zip -r9 unsigned.zip * -x LICENSE README.md
     mv unsigned.zip ../.signer/
     cd ..
 }
