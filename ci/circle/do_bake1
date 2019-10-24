@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus --depth=1 AnyKernel
+mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -23,7 +24,7 @@ export LD_LIBRARY_PATH="/root/clang/bin/../lib:$PATH"
 # Push kernel to channel
 function push() {
     PATH="/root/clang/bin:${PATH}"
-    cd AnyKernel || exit 1
+    cd .signer || exit 1
     ZIP=$(echo *.zip)
     curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
         -F chat_id="$chat_id" \
@@ -59,15 +60,27 @@ function compile() {
 # Zipping
 function zipping() {
     cd AnyKernel || exit 1
+    zip -r9 unsigned.zip * -x LICENCE README.md
+    mv unsigned.zip ../.signer/
+    cd ..
+}
+# Signer
+function signer() {
+    cd .signer || exit 1
     if [ "$is_test" = true ]; then
-        zip -r9 ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip * -x LICENCE README.md
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Clang-EAS-Alpha-"${TANGGAL}-${SHA}".zip
+        rm unsigned.zip
     else
-        zip -r9 ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip * -x LICENCE README.md
-    fi #ngentod
-    cd .. #well
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Clang-EAS-"${TANGGAL}-${SHA}".zip
+        rm unsigned.zip
+    fi
+    cd ..
 }
 compile
 zipping
+signer
 END=$(date +"%s")
 DIFF=$(($END - $START))
 push
