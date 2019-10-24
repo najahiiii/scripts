@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
-git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm --depth=1 gcc32
-git clone https://github.com/najahiiii/priv-toolchains -b elf/gcc-10.0.0/arm64 --depth=1 gcc
 git clone https://github.com/najahiiii/AnyKernel3.git -b asus-ten --depth=1 AnyKernel
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -14,8 +12,8 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
-GCC="$(pwd)/gcc/bin/aarch64-elf-"
-GCC32="$(pwd)/gcc32/bin/arm-eabi-"
+GCC="/root/toolchain/ARM64/bin/aarch64-elf-"
+GCC32="/root/toolchain/ARM/bin/arm-eabi-"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 TANGGAL=$(date +'%H%M-%d%m%y')
