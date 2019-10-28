@@ -17,8 +17,8 @@ GCC="/root/toolchain/ARM64/bin/aarch64-elf-"
 GCC32="/root/toolchain/ARM/bin/arm-eabi-"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
-TANGGAL=$(date +'%H%M-%d%m%y')
-START=$(date +"%s")
+TANGGAL3=$(date +'%H%M-%d%m%y')
+START3=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
@@ -40,7 +40,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 10.0 SAR Only</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 10.0 SAR Only</b> | <b>$(${GCC}gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Fin Error
 function finerr() {
@@ -75,11 +75,11 @@ function signer() {
     cd .signer || exit 1
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-SAR-GCC-EAS-Alpha-"${TANGGAL}-${SHA}".zip
+        unsigned.zip ChipsKernel-SAR-GCC-EAS-Alpha-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-SAR-GCC-EAS-"${TANGGAL}-${SHA}".zip
+        unsigned.zip ChipsKernel-SAR-GCC-EAS-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
@@ -88,6 +88,6 @@ patch
 compile
 zipping
 signer
-END=$(date +"%s")
-DIFF=$(($END - $START))
+END3=$(date +"%s")
+DIFF3=$(($END3 - $START3))
 push
