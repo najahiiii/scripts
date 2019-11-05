@@ -35,13 +35,25 @@ echo -e "${CLR_BLD_RED}                                        ░      ${CLR_RS
 echo -e ""
 echo -e "${CLR_BLD_BLU}Setting-up Users info...${CLR_RST}"
 echo -e ""
-git config --global user.email "najahiii@outlook.co.id"
-git config --global user.name "Najahiiii"
-echo -e "${CLR_BLD_YLW}Setting-up git global config...${CLR_RST}"
+# For all those distro hoppers, lets setup your git credentials
+GIT_USERNAME="$(git config --get user.name)"
+GIT_EMAIL="$(git config --get user.email)"
+echo -e "${CLR_BLD_BLU}Configuring Git${CLR_RST}"
+if [[ -z ${GIT_USERNAME} ]]; then
+	echo -e "${CLR_BLD_RED}Enter your name: ${CLR_RST}"
+	read -r NAME
+	git config --global user.name "${NAME}"
+fi
+if [[ -z ${GIT_EMAIL} ]]; then
+	echo -e "${CLR_BLD_RED}Enter your email: ${CLR_RST}"
+	read -r EMAIL
+	git config --global user.email "${EMAIL}"
+fi
+git config --global credential.helper "cache --timeout=7200"
+echo -e "${CLR_BLD_GRN}Setting-up Github credentials setup successfully${CLR_RST}"
 echo -e ""
 git config --global alias.cp 'cherry-pick'
 git config --global alias.cpn 'cherry-pick -n'
 git config --global alias.c 'commit'
 git config --global alias.f 'fetch'
-echo -e ""
-echo -e "${CLR_BLD_GRN}Ok, Beres. Ngntd...${CLR_RST}"
+echo -e "${CLR_BLD_BLU}Ok, Beres. Ngntd...${CLR_RST}"
