@@ -50,7 +50,7 @@ function compile() {
         finerr
         exit 1
     fi
-    cp out/arch/arm64/boot/Image.gz AnyKernel
+    cp out/arch/arm64/boot/Image.gz AnyKernel/kernel/
 }
 # Zipping
 function zipping() {
