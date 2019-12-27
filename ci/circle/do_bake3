@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 echo "Cloning dependencies"
-git clone https://github.com/najahiiii/AnyKernel3.git -b asus-ten --depth=1 AnyKernel
+git clone https://github.com/najahiiii/AnyKernel3.git -b asus-unified --depth=1 AnyKernel
+git clone https://github.com/NusantaraDevs/clang -b ndk-clang-10 --depth=1 clang
+git clone https://github.com/KudProject/arm-linux-androideabi-4.9 --depth=1 gcc32
+git clone https://github.com/KudProject/aarch64-linux-android-4.9 --depth=1 gcc
 mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
 echo "Done"
 if [ "$is_test" = true ]; then
@@ -13,25 +16,16 @@ if [ "$is_test" = true ]; then
 else
      echo "Its beta release build"
 fi
-GCC="/root/toolchain/ARM64/bin/aarch64-elf-"
-GCC32="/root/toolchain/ARM/bin/arm-eabi-"
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+KERNEL_DIR=$(pwd)
+PATH="${KERNEL_DIR}/clang/bin:${KERNEL_DIR}/gcc/bin:${KERNEL_DIR}/gcc32/bin:${PATH}"
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
-TANGGAL3=$(date +'%H%M-%d%m%y')
 START3=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
-# Patch for sar
-function patch() {
-    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/363726eb22f68f491a07e8ca510c9d542601d42f.patch | git am
-    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/59a43d7a80a70f024310e361f1fac41f2b1b1b68.patch | git am
-    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/37f0e91960a4ed544ef84fbef26248a1e41ece05.patch | git am
-    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/2e3d1ed85d39ff088f39f3cbadab26d4739bb23d.patch | git am
-    curl -s https://github.com/najahiiii/kernel_asus_sdm660/commit/4c93283d616c29656bd61eee8156fd7facfba926.patch | git am
-}
 # Push kernel to channel
 function push() {
     cd .signer || exit 1
@@ -55,36 +49,38 @@ function finerr() {
 function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out X00T_defconfig
     make -C "$(pwd)" O=out -j$(nproc) \
-        CROSS_COMPILE="${GCC}" \
-        CROSS_COMPILE_ARM32="${GCC32}"
+                    CC=clang \
+                    CLANG_TRIPLE=aarch64-linux-gnu- \
+                    CROSS_COMPILE=aarch64-linux-android- \
+                    CROSS_COMPILE_ARM32=arm-linux-androideabi-
         if ! [ -a "$IMAGE" ]; then
             finerr
             exit 1
         fi
-    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+    cp out/arch/arm64/boot/Image.gz AnyKernel/kernel/
 }
 # Zipping
 function zipping() {
     cd AnyKernel || exit 1
-    zip -r9q unsigned.zip * -x LICENSE README.md
+    zip -r9q unsigned.zip * -x LICENSE README.md kernel/placeholder
     mv unsigned.zip ../.signer/
     cd ..
 }
 # Signer
 function signer() {
     cd .signer || exit 1
+    TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-SAR-GCC-EAS-Alpha-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Clang-EAS-Alpha-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-SAR-GCC-EAS-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Clang-EAS-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
 }
-patch
 compile
 zipping
 signer
