@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+echo "Cloning dependencies"
+git clone https://github.com/najahiiii/AnyKernel3.git -b ginkgo --depth=1 AnyKernel
+git clone https://github.com/NusantaraDevs/clang -b ndk-clang-10 --depth=1 clang
+git clone https://github.com/KudProject/arm-linux-androideabi-4.9 --depth=1 gcc32
+git clone https://github.com/KudProject/aarch64-linux-android-4.9 --depth=1 gcc
+mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
+echo "Done"
+if [ "$is_test" = true ]; then
+     echo "Its alpha test build"
+     unset chat_id
+     unset token
+     export chat_id=${my_id}
+     export token=${nToken}
+     export YEET=-Alpha
+else
+     echo "Its beta release build"
+fi
+KERNEL_DIR=$(pwd)
+PATH="${KERNEL_DIR}/clang/bin:${KERNEL_DIR}/gcc/bin:${KERNEL_DIR}/gcc32/bin:${PATH}"
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
+START3=$(date +"%s")
+export ARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export KBUILD_BUILD_HOST=NusantaraDevs
+git config --global user.email "najahiii@outlook.co.id"
+git config --global user.name "Najahiiii"
+# Push kernel to channel
+function push() {
+    cd .signer || exit 1
+    ZIP=$(echo *.zip)
+    curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For Xiaomi Redmi Note 8 (Ginkgo)</b> #MIUI | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+}
+# Fin Error
+function finerr() {
+    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+        -d chat_id="$chat_id" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d text="Job Baking Chips throw an error(s)"
+    exit 1
+}
+
+# Env
+ZIP_DIR=$KERNEL_DIR/AnyKernel
+VENDOR_MODULEDIR="$ZIP_DIR/modules/vendor/lib/modules"
+STRIP="aarch64-linux-android-strip"
+
+# Do Wifi modules
+function wifi_modules() {
+    # credit @adekmaulana
+    for MODULES in $(find "$KERNEL_DIR/out" -name '*.ko'); do
+        "${STRIP}" --strip-unneeded --strip-debug "${MODULES}"
+        "$KERNEL_DIR/out/scripts/sign-file" sha512 \
+                "$KERNEL_DIR/out/certs/signing_key.pem" \
+                "$KERNEL_DIR/out/certs/signing_key.x509" \
+                "${MODULES}"
+        case ${MODULES} in
+                */wlan.ko)
+            cp "${MODULES}" "${VENDOR_MODULEDIR}/qca_cld3_wlan.ko" ;;
+        esac
+    done
+    echo -e "(i) Done moving wifi modules"
+}
+# Compile plox
+function compile() {
+    make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
+    make -C "$(pwd)" O=out -j$(nproc) \
+                    CC=clang \
+                    CLANG_TRIPLE=aarch64-linux-gnu- \
+                    CROSS_COMPILE=aarch64-linux-android- \
+                    CROSS_COMPILE_ARM32=arm-linux-androideabi-
+        if ! [ -a "$IMAGE" ]; then
+            finerr
+            exit 1
+        fi
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/
+}
+# Zipping
+function zipping() {
+    cd AnyKernel || exit 1
+    zip -r9q unsigned.zip * -x LICENSE README.md *placeholder
+    mv unsigned.zip ../.signer/
+    cd ..
+}
+# Signer
+function signer() {
+    cd .signer || exit 1
+    TANGGAL3=$(date +'%H%M-%d%m%y')
+    if [ "$is_test" = true ]; then
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Ginkgo-Alpha-"${TANGGAL3}-${SHA}".zip
+        rm unsigned.zip
+    else
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Ginkgo-"${TANGGAL3}-${SHA}".zip
+        rm unsigned.zip
+    fi
+    cd ..
+}
+compile
+zipping
+signer
+END3=$(date +"%s")
+DIFF3=$(($END3 - $START3))
+push
