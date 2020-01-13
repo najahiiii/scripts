@@ -14,7 +14,7 @@ else
      echo "Its beta release build"
 fi
 KERNEL_DIR=$(pwd)
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
 PATH="/root/aosp-clang/bin:/root/gcc-4.9/arm64/bin:/root/gcc-4.9/arm/bin:${PATH}"
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 START3=$(date +"%s")
@@ -30,7 +30,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8 (Ginkgo)</b> #MIUI | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8 (Ginkgo)</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
 }
 # Fin Error
 function finerr() {
@@ -38,7 +38,7 @@ function finerr() {
         -d chat_id="$chat_id" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=markdown" \
-        -d text="Job Baking Chips throw an error(s)"
+        -d text="Job Baking Chips throw an error(s), @Najahiii Reeeee..."
     exit 1
 }
 
@@ -76,7 +76,8 @@ function compile() {
             exit 1
         fi
     wifi_modules
-    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/
+    cp out/arch/arm64/boot/Image.gz AnyKernel/kernel/
+    cp out/arch/arm64/boot/dts/qcom/trinket.dtb AnyKernel/dtbs/
 }
 # Zipping
 function zipping() {
