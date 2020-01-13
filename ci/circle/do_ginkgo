@@ -15,12 +15,13 @@ else
 fi
 KERNEL_DIR=$(pwd)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
-PATH="/root/aosp-clang/bin:/root/gcc-4.9/arm64/bin:/root/gcc-4.9/arm/bin:${PATH}"
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 START3=$(date +"%s")
+PATH="/root/clang/bin:${PATH}"
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
+export LD_LIBRARY_PATH="/root/clang/bin/../lib:$PATH"
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Push kernel to channel
@@ -45,7 +46,7 @@ function finerr() {
 # Env
 ZIP_DIR=$KERNEL_DIR/AnyKernel
 VENDOR_MODULEDIR="$ZIP_DIR/modules/vendor/lib/modules"
-STRIP="aarch64-linux-android-strip"
+STRIP="aarch64-linux-gnu-strip"
 
 # Do Wifi modules
 function wifi_modules() {
@@ -69,8 +70,8 @@ function compile() {
     make -C "$(pwd)" O=out -j$(nproc) \
                     CC=clang \
                     CLANG_TRIPLE=aarch64-linux-gnu- \
-                    CROSS_COMPILE=aarch64-linux-android- \
-                    CROSS_COMPILE_ARM32=arm-linux-androideabi-
+                    CROSS_COMPILE=aarch64-linux-gnu- \
+                    CROSS_COMPILE_ARM32=arm-linux-gnueabi-
         if ! [ -a "$IMAGE" ]; then
             finerr
             exit 1
