@@ -14,7 +14,7 @@ else
      echo "Its beta release build"
 fi
 KERNEL_DIR=$(pwd)
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 START3=$(date +"%s")
 PATH="/root/clang/bin:${PATH}"
@@ -77,8 +77,7 @@ function compile() {
             exit 1
         fi
     wifi_modules
-    cp out/arch/arm64/boot/Image.gz AnyKernel/kernel/
-    cp out/arch/arm64/boot/dts/qcom/trinket.dtb AnyKernel/dtbs/
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/
 }
 # Zipping
 function zipping() {
