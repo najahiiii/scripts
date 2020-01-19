@@ -21,7 +21,7 @@ PATH="/root/clang/bin:${PATH}"
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
-export LD_LIBRARY_PATH="/root/clang/bin/../lib:$PATH"
+export LD_LIBRARY_PATH="/root/clang/bin/../lib:${LD_LIBRARY_PATH}"
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Push kernel to channel
@@ -46,7 +46,7 @@ function finerr() {
 # Env
 ZIP_DIR=$KERNEL_DIR/AnyKernel
 VENDOR_MODULEDIR="$ZIP_DIR/modules/vendor/lib/modules"
-STRIP="aarch64-linux-gnu-strip"
+STRIP="llvm-strip"
 
 # Do Wifi modules
 function wifi_modules() {
@@ -69,6 +69,12 @@ function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
     make -C "$(pwd)" O=out -j$(nproc) \
                     CC=clang \
+                    AR=llvm-ar \
+                    AS=llvm-as \
+                    NM=llvm-nm \
+                    OBJCOPY=llvm-objcopy \
+                    OBJDUMP=llvm-objdump \
+                    STRIP=llvm-strip \
                     CLANG_TRIPLE=aarch64-linux-gnu- \
                     CROSS_COMPILE=aarch64-linux-gnu- \
                     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
@@ -92,11 +98,11 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-Alpha-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-MIUI-AOSP-9-Alpha-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-MIUI-AOSP-9-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
