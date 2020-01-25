@@ -47,12 +47,6 @@ function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
     make -C "$(pwd)" O=out -j$(nproc) \
                     CC=clang \
-                    AR=llvm-ar \
-                    AS=llvm-as \
-                    NM=llvm-nm \
-                    OBJCOPY=llvm-objcopy \
-                    OBJDUMP=llvm-objdump \
-                    STRIP=llvm-strip \
                     CLANG_TRIPLE=aarch64-linux-gnu- \
                     CROSS_COMPILE=aarch64-linux-gnu- \
                     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
