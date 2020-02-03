@@ -15,13 +15,11 @@ else
 fi
 KERNEL_DIR=$(pwd)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
-PATH="/root/clang/bin:${PATH}"
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 START3=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
-export LD_LIBRARY_PATH="/root/clang/bin/../lib:${LD_LIBRARY_PATH}"
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Push kernel to channel
