@@ -89,6 +89,7 @@ git config --global alias.cp 'cherry-pick'
 git config --global alias.cpn 'cherry-pick -n'
 git config --global alias.c 'commit'
 git config --global alias.f 'fetch'
+git config --global core.editor 'nano'
 
 # Repo
 echo "Installing Git Repository Tool"
