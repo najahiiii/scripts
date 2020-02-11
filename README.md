@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------
 
 <p align="center">
- <img src="https://github.com/najahiiii/Noob-Script/blob/noob/logo.png">
+ <img src="https://github.com/najahiiii/Noob-Script/blob/noob/bin/logo.png">
 </p>
 
 -----------------------------------------------------------------------

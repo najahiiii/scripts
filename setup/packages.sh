@@ -5,9 +5,15 @@
 # Script to setup an Android 10 build
 # environment for Fedora 31 / Rawhide.
 
-sudo cp setup/che-llvm.repo /etc/yum.repos.d/
-sudo cp setup/lantw44-arm-gcc.repo /etc/yum.repos.d/
-sudo cp setup/lantw44-arm64-gcc.repo /etc/yum.repos.d/
+# Bash color
+source $(dirname $0)/color.sh
+
+# Check if alaready exists
+if [[ ! /etc/yum.repos.d/che*.repo && ! /etc/yum.repos.d/lantw*.repo ]]; then
+    sudo cp setup/che-llvm.repo /etc/yum.repos.d/
+    sudo cp setup/lantw44-arm-gcc.repo /etc/yum.repos.d/
+    sudo cp setup/lantw44-arm64-gcc.repo /etc/yum.repos.d/
+fi
 
 # Packages
 sudo dnf install -y \
