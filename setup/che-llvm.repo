@@ -1,0 +1,8 @@
+[che-llvm]
+name=Copr repo for llvm owned by che
+baseurl=https://copr-be.cloud.fedoraproject.org/results/che/llvm/fedora-31-x86_64/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/che/llvm/pubkey.gpg
+enabled=1
+enabled_metadata=1

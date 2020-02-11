@@ -1,0 +1,8 @@
+[lantw44-arm-gcc]
+name=Copr repo for gcc owned by lantw44
+baseurl=https://copr-be.cloud.fedoraproject.org/results/lantw44/arm-linux-gnueabi-toolchain/fedora-31-x86_64
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/lantw44/arm-linux-gnueabi-toolchain/pubkey.gpg
+enabled=1
+enabled_metadata=1

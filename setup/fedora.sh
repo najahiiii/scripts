@@ -23,54 +23,26 @@ CLR_BLD_BLU=$CLR_RST$CLR_BLD$(tput setaf 4) #  blue, bold
 CLR_BLD_PPL=$CLR_RST$CLR_BLD$(tput setaf 5) #  purple, bold
 CLR_BLD_CYA=$CLR_RST$CLR_BLD$(tput setaf 6) #  cyan, bold
 
-# Packages
-sudo dnf install -y \
-    autoconf213 \
-    bison \
-    bzip2 \
-    ccache \
-    curl \
-    flex \
-    gawk \
-    gcc-c++ \
-    git \
-    glibc-devel \
-    glibc-static \
-    libstdc++-static \
-    libX11-devel \
-    make \
-    mesa-libGL-devel \
-    ncurses-devel \
-    patch \
-    zlib-devel \
-    ncurses-devel.i686 \
-    readline-devel.i686 \
-    zlib-devel.i686 \
-    libX11-devel.i686 \
-    mesa-libGL-devel.i686 \
-    glibc-devel.i686 \
-    libstdc++.i686 \
-    libXrandr.i686 \
-    zip \
-    perl-Digest-SHA \
-    python2 \
-    wget \
-    lzop \
-    openssl-devel \
-    java-1.8.0-openjdk-devel \
-    ImageMagick \
-    ncurses-compat-libs \
-    schedtool \
-    lzip \
-    vboot-utils \
-    screen \
-    htop \
-    neofetch \
-    git-subtree
+# Indonesian timezone (GMT+7)
+TZ=Asia/Jakarta
+sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Initial Update
+sudo dnf update -y
+
+# Install packages
+bash ./setup/packages.sh
+
+# meh
+echo ""
 
 # The package libncurses5 is not available, so we need to hack our way by symlinking the required library.
-sudo ln -s /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
-sudo ln -s /usr/lib/libncurses.so.6 /usr/lib/libtinfo.so.5
+if [[ -e /usr/lib/libncurses.so.5 && ! -e /usr/lib/libtinfo.so.5 ]]; then
+    sudo ln -s /usr/lib/libncurses.so.6 /usr/lib/libncurses.so.5
+    sudo ln -s /usr/lib/libncurses.so.6 /usr/lib/libtinfo.so.5
+fi
+    echo -e "${CLR_BLD_GRN}libncurses already symlinked${CLR_RST}"
+    echo ""
 
 # For all those distro hoppers, lets setup your git credentials
 GIT_USERNAME="$(git config --get user.name)"
