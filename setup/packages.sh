@@ -8,6 +8,9 @@
 # Bash color
 source $(dirname $0)/color.sh
 
+# Env
+LATEST_MAKE_VERSION="4.3"
+
 # Check if alaready exists
 if [[ ! /etc/yum.repos.d/che*.repo && ! /etc/yum.repos.d/lantw*.repo ]]; then
     sudo cp setup/che-llvm.repo /etc/yum.repos.d/
@@ -16,10 +19,12 @@ if [[ ! /etc/yum.repos.d/che*.repo && ! /etc/yum.repos.d/lantw*.repo ]]; then
 fi
 
 # Packages
-sudo dnf install -y \
+echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Installing packages...${CLR_RST}\n"
+sudo dnf install -qy \
     aarch64-linux-gnu-{binutils,gcc,glibc} \
     arm-linux-gnueabi-{binutils,gcc,glibc} \
     autoconf213 \
+    axel \
     bison \
     bzip2 \
     clang \
@@ -65,3 +70,11 @@ sudo dnf install -y \
     htop \
     neofetch \
     git-subtree
+
+if [[ "$(command -v make)" ]]; then
+    makeversion="$(make -v | head -1 | awk '{print $3}')"
+    if [[ "${makeversion}" != "${LATEST_MAKE_VERSION}" ]]; then
+        echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Installing make ${LATEST_MAKE_VERSION} instead of ${makeversion}${CLR_RST}"
+        bash $(dirname $0)/make.sh "${LATEST_MAKE_VERSION}"
+    fi
+fi
