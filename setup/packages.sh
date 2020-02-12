@@ -80,3 +80,7 @@ if [[ "$(command -v make)" ]]; then
         bash $(dirname $0)/make.sh "${LATEST_MAKE_VERSION}"
     fi
 fi
+
+# Install gdrive-cli
+echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Installing gdrive-cli...${CLR_RST}\n"
+sudo install bin/gdrive /usr/bin/
