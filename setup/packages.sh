@@ -12,11 +12,13 @@ source $(dirname $0)/color.sh
 LATEST_MAKE_VERSION="4.3"
 
 # Check if alaready exists
-if [[ ! /etc/yum.repos.d/che*.repo && ! /etc/yum.repos.d/lantw*.repo ]]; then
+if [[ ! /etc/yum.repos.d/che-llvm.repo && ! /etc/yum.repos.d/lantw44-arm-gcc.repo && ! /etc/yum.repos.d/lantw44-arm64-gcc.repo ]]; then
+    echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Copying Copr repo file...${CLR_RST}\n"
     sudo cp setup/che-llvm.repo /etc/yum.repos.d/
     sudo cp setup/lantw44-arm-gcc.repo /etc/yum.repos.d/
     sudo cp setup/lantw44-arm64-gcc.repo /etc/yum.repos.d/
 fi
+    echo -e "[${CLR_BLD_YLW}!${CLR_RST}] ${CLR_BLD_YLW}Copr repo already exists, skipping...${CLR_RST}\n"
 
 # Packages
 echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Installing packages...${CLR_RST}\n"
