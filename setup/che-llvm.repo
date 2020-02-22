@@ -1,6 +1,15 @@
-[che-llvm]
+[copr:copr.fedorainfracloud.org:che:llvm]
 name=Copr repo for llvm owned by che
-baseurl=https://copr-be.cloud.fedoraproject.org/results/che/llvm/fedora-31-x86_64/
+baseurl=https://copr-be.cloud.fedoraproject.org/results/che/llvm/fedora-$releasever-$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/che/llvm/pubkey.gpg
+enabled=1
+enabled_metadata=1
+
+[copr:copr.fedorainfracloud.org:che:llvm]
+name=Copr repo for llvm i386 owned by che
+baseurl=https://copr-be.cloud.fedoraproject.org/results/che/llvm/fedora-$releasever-i386/
 skip_if_unavailable=True
 gpgcheck=1
 gpgkey=https://copr-be.cloud.fedoraproject.org/results/che/llvm/pubkey.gpg
