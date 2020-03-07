@@ -1,0 +1,59 @@
+#!bin/bash sh
+#
+#
+
+# Env
+echo -e "Start kernel build script..."
+export token=######
+export chat_id=#####
+export ARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export KBUILD_BUILD_HOST=NusantaraDevs
+export PATH="$HOME/toolchain/bin:${PATH}"
+export LD_LIBRARY_PATH="$HOME/toolchain/bin/../lib:${LD_LIBRARY_PATH}"
+
+# Compile plox
+function compile() {
+    make -s -C "$(pwd)" ${1} ${2} O=out vendor/chips_defconfig
+    make -C "$(pwd)" ${1} ${2} O=out \
+                    CC=clang \
+                    CLANG_TRIPLE=aarch64-linux-gnu- \
+                    CROSS_COMPILE=aarch64-linux-gnu- \
+                    CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+}
+
+# Push
+function pushtg() {
+    mv out/arch/arm64/boot/Image.gz-dtb $HOME/AnyKernel3
+    cd $HOME/AnyKernel3 || exit 1
+    zip -r9q ChipsKernel-Ginkgo-AOSP-10-Alpha-"$(date +'%H%M-%d%m%y')".zip * -x LICENSE README.md *placeholder
+    curl --silent --output /dev/null -F document=@"$(echo *.zip)" "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id"
+    rm -rf *.zip kernel/*.gz dtbs/*.dtb *.gz-dtb
+    cd $HOME/kernel
+}
+
+# Send some file to tg
+function sendtg() {
+   curl --silent --output /dev/null -F document=@"${1}" \
+   "https://api.telegram.org/bot$token/sendDocument" \
+   -F chat_id="$chat_id"
+   echo -e "Sent!"
+}
+
+# Regen it
+function regen() {
+   make O=out vendor/chips_defconfig
+   make O=out savedefconfig
+   mv out/defconfig arch/arm64/configs/vendor/chips_defconfig
+   echo -e "Done..."
+}
+
+# Merge scripts
+function merge_log() {
+  remote=${1};
+  tag=${2};
+  git fetch $remote $tag
+  git merge FETCH_HEAD -m "Merge $tag of $(git remote get-url $remote) into $(git branch | grep "\*" | sed 's/\* //')
+$(git log --oneline $(git branch | grep "\*" | sed 's/\* //')..FETCH_HEAD)" --signoff
+};
