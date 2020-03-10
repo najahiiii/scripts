@@ -21,7 +21,7 @@ fi
 
 # Packages
 echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Installing packages...${CLR_RST}\n"
-sudo dnf install -qy \
+sudo dnf install -y \
     aarch64-linux-gnu-{binutils,gcc,glibc} \
     arm-linux-gnueabi-{binutils,gcc,glibc} \
     autoconf213 \
