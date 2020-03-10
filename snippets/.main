@@ -12,6 +12,9 @@ export KBUILD_BUILD_HOST=NusantaraDevs
 export PATH="$HOME/toolchain/bin:${PATH}"
 export LD_LIBRARY_PATH="$HOME/toolchain/bin/../lib:${LD_LIBRARY_PATH}"
 
+# Required for gpg sign
+export GPG_TTY=$(tty)
+
 # Compile plox
 function compile() {
     make -s -C "$(pwd)" ${1} ${2} O=out vendor/chips_defconfig
