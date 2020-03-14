@@ -67,11 +67,11 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Willow-AOSP-10-Alpha-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Willow-AOSP-10-SDX-Alpha-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Willow-AOSP-10-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Willow-AOSP-10-SDX-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
