@@ -47,9 +47,9 @@ if [[ -z ${GIT_EMAIL} ]]; then
 fi
 git config --global credential.helper "cache --timeout=7200"
 echo -e "[${CLR_BLD_GRN}+${CLR_RST}] ${CLR_BLD_GRN}Setting-up Github credentials setup successfully${CLR_RST}"
-git config --global alias.cp 'cherry-pick'
+git config --global alias.cp 'cherry-pick -S'
 git config --global alias.cpn 'cherry-pick -n'
-git config --global alias.c 'commit'
+git config --global alias.c 'commit -sS'
 git config --global alias.f 'fetch'
 git config --global core.editor 'nano'
 
