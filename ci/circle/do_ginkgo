@@ -41,27 +41,6 @@ function finerr() {
     exit 1
 }
 
-# Env
-ZIP_DIR=$KERNEL_DIR/AnyKernel
-VENDOR_MODULEDIR="$ZIP_DIR/modules/vendor/lib/modules"
-STRIP="aarch64-linux-gnu-strip"
-
-# Do Wifi modules
-function wifi_modules() {
-    # credit @adekmaulana
-    for MODULES in $(find "$KERNEL_DIR/out" -name '*.ko'); do
-        "${STRIP}" --strip-unneeded --strip-debug "${MODULES}"
-        "$KERNEL_DIR/out/scripts/sign-file" sha512 \
-                "$KERNEL_DIR/out/certs/signing_key.pem" \
-                "$KERNEL_DIR/out/certs/signing_key.x509" \
-                "${MODULES}"
-        case ${MODULES} in
-                */wlan.ko)
-            cp "${MODULES}" "${VENDOR_MODULEDIR}/qca_cld3_wlan.ko" ;;
-        esac
-    done
-    echo -e "(i) Done moving wifi modules"
-}
 # Compile plox
 function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
@@ -74,7 +53,6 @@ function compile() {
             finerr
             exit 1
         fi
-    wifi_modules
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/
 }
 # Zipping
