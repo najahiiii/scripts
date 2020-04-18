@@ -1,13 +1,19 @@
 #!/bin/bash
-if [ "$is_test" = true ]; then
-     echo "Its alpha test build"
-     unset chat_id
-     unset token
-     export chat_id=${my_id}
-     export token=${nToken}
-else
-     echo "Its beta release build"
-fi
+CHECKPOINT="$(git log --pretty=format:'%h : %s' -1)"
+case $CHECKPOINT in
+	*"[rel]"*)
+		echo -e "It is release build"
+		export YEET=-r$CIRCLE_BUILD_NUM
+	;;
+	*)
+		echo -e "teeeeeessssttt reeeeee"
+		unset chat_id
+		unset token
+		export chat_id=${my_id}
+		export token=${nToken}
+		export YEET=-Alpha
+	;;
+esac
 # sticker plox
 function sticker() {
         curl -s -X POST "https://api.telegram.org/bot$token/sendSticker" \
