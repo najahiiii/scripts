@@ -22,10 +22,10 @@ KERNEL_DIR=$(pwd)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 START3=$(date +"%s")
-PATH="/root/clang/bin:${PATH}"
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
+export PATH="/root/clang/bin:${PATH}"
 export LD_LIBRARY_PATH="/root/clang/bin/../lib:${LD_LIBRARY_PATH}"
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
@@ -53,7 +53,11 @@ function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
     make -C "$(pwd)" O=out -j$(nproc) \
                     CC=clang \
-                    CLANG_TRIPLE=aarch64-linux-gnu- \
+                    AR=llvm-ar \
+                    NM=llvm-nm \
+                    OBJCOPY=llvm-objcopy \
+                    OBJDUMP=llvm-objdump \
+                    STRIP=llvm-strip \
                     CROSS_COMPILE=aarch64-linux-gnu- \
                     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
         if ! [ -a "$IMAGE" ]; then
