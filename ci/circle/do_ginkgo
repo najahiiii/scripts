@@ -27,6 +27,8 @@ export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
 export PATH="/root/clang/bin:${PATH}"
 export LD_LIBRARY_PATH="/root/clang/bin/../lib:${LD_LIBRARY_PATH}"
+export CCV=$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')
+export LLDV=$(ld.lld --version | head -n1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Push kernel to channel
@@ -36,7 +38,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8 (Ginkgo)</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8 (Ginkgo)</b> | <b>$CCV, $LLDV</b>"
 }
 # Fin Error
 function finerr() {
