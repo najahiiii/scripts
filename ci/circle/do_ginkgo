@@ -15,7 +15,7 @@ case $CHECKPOINT in
                 unset token
                 export chat_id=${my_id}
                 export token=${nToken}
-                export YEET=-Alpha
+                export YEET=-Alpha-rc$CIRCLE_BUILD_NUM
         ;;
 esac
 KERNEL_DIR=$(pwd)
@@ -81,7 +81,7 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-MIUI-AOSP-9-Alpha-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-MIUI-AOSP-9-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
