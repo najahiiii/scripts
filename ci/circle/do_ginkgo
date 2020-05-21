@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 echo "Cloning dependencies"
 git clone https://github.com/najahiiii/AnyKernel3.git -b ginkgo --depth=1 AnyKernel
 mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
@@ -11,6 +11,7 @@ case $CHECKPOINT in
         ;;
         *)
                 echo -e "teeeeeessssttt reeeeee"
+                export is_test=true
                 unset chat_id
                 unset token
                 export chat_id=${my_id}
@@ -26,7 +27,6 @@ export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
 export PATH="/root/clang/bin:${PATH}"
-export LD_LIBRARY_PATH="/root/clang/bin/../lib:${LD_LIBRARY_PATH}"
 export CCV=$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')
 export LLDV=$(ld.lld --version | head -n1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
 git config --global user.email "najahiii@outlook.co.id"
@@ -38,7 +38,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8 (Ginkgo)</b> | <b>$CCV, $LLDV</b>"
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8/8T (Ginkgo/Willow) Android 9/Pie</b> #Unified | <b>$CCV, $LLDV</b>"
 }
 # Fin Error
 function finerr() {
@@ -81,11 +81,11 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-MIUI-AOSP-9-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-Willow-A9-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-MIUI-AOSP-9-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-Willow-A9-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
