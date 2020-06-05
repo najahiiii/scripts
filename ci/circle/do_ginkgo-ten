@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 echo "Cloning dependencies"
 git clone https://github.com/najahiiii/AnyKernel3.git -b ginkgo-ten --depth=1 AnyKernel
 mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
@@ -14,8 +14,8 @@ case $CHECKPOINT in
                 unset chat_id
                 unset token
                 export chat_id=${my_id}
+                export is_test=true
                 export token=${nToken}
-                export YEET=-Alpha
         ;;
 esac
 KERNEL_DIR=$(pwd)
@@ -25,6 +25,7 @@ START3=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
+export PATH="/root/clang/bin:${PATH}"
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Push kernel to channel
@@ -72,11 +73,11 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-AOSP-10-SDX-Alpha-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-AOSP-10-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-AOSP-10-SDX-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-AOSP-10-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
