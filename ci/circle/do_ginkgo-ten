@@ -26,6 +26,8 @@ export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
 export PATH="/root/clang/bin:${PATH}"
+export CCV=$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')
+export LLDV=$(ld.lld --version | head -n1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
 git config --global user.email "najahiii@outlook.co.id"
 git config --global user.name "Najahiiii"
 # Push kernel to channel
@@ -35,7 +37,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8 (Ginkgo) Android 10/Q</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8/8T (Ginkgo/Willow) Android 10/Q</b> #Unified | <b>$CCV, $LLDV</b>"
 }
 # Fin Error
 function finerr() {
@@ -51,7 +53,11 @@ function compile() {
     make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
     make -C "$(pwd)" O=out -j$(nproc) \
                     CC=clang \
-                    CLANG_TRIPLE=aarch64-linux-gnu- \
+                    AR=llvm-ar \
+                    NM=llvm-nm \
+                    OBJCOPY=llvm-objcopy \
+                    OBJDUMP=llvm-objdump \
+                    STRIP=llvm-strip \
                     CROSS_COMPILE=aarch64-linux-gnu- \
                     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
         if ! [ -a "$IMAGE" ]; then
@@ -73,11 +79,11 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-AOSP-10-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-Willow-A10-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-AOSP-10-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip ChipsKernel-Ginkgo-Willow-A10-"${TANGGAL3}-${SHA}".zip
         rm unsigned.zip
     fi
     cd ..
