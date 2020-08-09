@@ -25,11 +25,8 @@ START3=$(date +"%s")
 export ARCH=arm64
 export KBUILD_BUILD_USER=Najahi
 export KBUILD_BUILD_HOST=NusantaraDevs
-export PATH="/root/clang/bin:${PATH}"
 export CCV=$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')
-export LLDV=$(ld.lld --version | head -n1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
-git config --global user.email "najahiii@outlook.co.id"
-git config --global user.name "Najahiiii"
+export LLDV=$(ld.lld --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
 # Push kernel to channel
 function push() {
     cd .signer || exit 1
@@ -64,7 +61,8 @@ function compile() {
             finerr
             exit 1
         fi
-    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/
+    cp out/arch/arm64/boot/Image.gz AnyKernel/
+    find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + > AnyKernel/dtb
 }
 # Zipping
 function zipping() {
@@ -79,11 +77,11 @@ function signer() {
     TANGGAL3=$(date +'%H%M-%d%m%y')
     if [ "$is_test" = true ]; then
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-Willow-A10-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
+        unsigned.zip Chips-Ginkgo-A10-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}"-signed.zip
         rm unsigned.zip
     else
         java -jar zipsigner-3.0.jar \
-        unsigned.zip ChipsKernel-Ginkgo-Willow-A10-"${TANGGAL3}-${SHA}".zip
+        unsigned.zip Chips-Ginkgo-A10-"${TANGGAL3}-${SHA}"-signed.zip
         rm unsigned.zip
     fi
     cd ..
