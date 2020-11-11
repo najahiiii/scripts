@@ -1,7 +1,7 @@
 [user]
 	name = Ahmad Thoriq Najahi
-	email = najahi@chips-projects.xyz
-	signingKey = 73FC5AB28A919D8ABE80F4F4EFFD6230CE5424D6
+	email = najahi@nusantaradevs.org
+	signingKey = AE5C7FEE67A27F72080D5F69B4258376B3B185E3
 [credential]
 	helper = cache --timeout=7200
 [commit]
