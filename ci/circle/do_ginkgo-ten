@@ -20,11 +20,12 @@ case $CHECKPOINT in
 esac
 KERNEL_DIR=$(pwd)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
 SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
 START3=$(date +"%s")
 export ARCH=arm64
-export KBUILD_BUILD_USER=Najahi
-export KBUILD_BUILD_HOST=NusantaraDevs
+export KBUILD_BUILD_USER=BuildBot
+export KBUILD_BUILD_HOST=CircleCI
 export CCV=$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')
 export LLDV=$(ld.lld --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
 # Push kernel to channel
@@ -61,8 +62,8 @@ function compile() {
             finerr
             exit 1
         fi
-    cp out/arch/arm64/boot/Image.gz AnyKernel/
-    find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + > AnyKernel/dtb
+    cp $IMAGE AnyKernel/
+    cp $DTBO AnyKernel/
 }
 # Zipping
 function zipping() {
