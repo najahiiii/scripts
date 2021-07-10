@@ -17,32 +17,23 @@ export GPG_TTY=$(tty)
 # Compile plox
 function compile() {
 export HASH=$(git log --pretty=format:'%h' -1)
-    make -s -C "$(pwd)" ${1} ${2} O=out vendor/chips_defconfig
-    make -C "$(pwd)" ${1} ${2} O=out \
-                    CC=clang \
-                    CROSS_COMPILE=aarch64-linux-gnu- \
-                    AR=llvm-ar \
-                    NM=llvm-nm \
-                    OBJCOPY=llvm-objcopy \
-                    OBJDUMP=llvm-objdump \
-                    STRIP=llvm-strip
+    make -s -C "$(pwd)" ${1} ${2} O=out LLVM=1 chips_defconfig
+    make -C "$(pwd)" ${1} ${2} O=out LLVM=1
 }
 
 # Push
 function pushtg() {
-    mv out/arch/arm64/boot/dts/qcom/trinket.dtb $HOME/AnyKernel3/dtb
-    mv out/arch/arm64/boot/Image.gz $HOME/AnyKernel3/
-    cd $HOME/AnyKernel3 || exit 1
+    find out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $HOME/AnyKernel3/dtb
+    cp out/arch/arm64/boot/Image $HOME/AnyKernel3/
+    pushd $HOME/AnyKernel3
     zip -r9q unsigned.zip *
     java -jar $HOME/scripts/bin/zipsigner-3.0.jar \
-        $HOME/.key/certificate.pem \
-        $HOME/.key/key.pk8 \
         unsigned.zip \
-        Chips-Ginkgo-A10-Alpha-"$(date +'%H%M-%d%m%y')-${HASH}"-signed.zip
+        Chips-OOS_OP9Pro-Alpha-"$(date +'%H%M-%d%m%y')-${HASH}"-signed.zip
     curl --silent --output /dev/null -F document=@"$(echo Chips-*.zip)" "https://api.telegram.org/bot$token/sendDocument" \
         -F chat_id="$chat_id"
-    rm -rf *.zip dtb *.gz
-    cd $HOME/kernel
+    rm -rf *.zip dtb Image
+    popd
 }
 
 # Send some file to tg
