@@ -1,7 +1,7 @@
 [user]
 	name = Ahmad Thoriq Najahi
-	email = najahi@nusantaradevs.org
-	signingKey = AE5C7FEE67A27F72080D5F69B4258376B3B185E3
+	email = najahi@zephyrus.id
+	signingKey = C4907293C4123FEA50435487F1F4FA115DADBD90
 [credential]
 	helper = cache --timeout=7200
 [commit]
