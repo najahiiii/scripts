@@ -1,9 +1,9 @@
-From 33402aeb52e59392d8f6cb23b0bbe4dc64962860 Mon Sep 17 00:00:00 2001
-From: Ahmad Thoriq Najahi <najahi@nusantaradevs.org>
+From a5df293f73ec0d293f40047011756bea6ee35aed Mon Sep 17 00:00:00 2001
+From: Ahmad Thoriq Najahi <najahi@zephyrus.id>
 Date: Fri, 29 Jan 2021 00:41:37 +0700
 Subject: [PATCH] version: Simplify versioning
 
-Signed-off-by: Ahmad Thoriq Najahi <najahi@nusantaradevs.org>
+Signed-off-by: Ahmad Thoriq Najahi <najahi@zephyrus.id>
 ---
  clang/lib/Basic/Version.cpp | 10 ++--------
  lld/Common/Version.cpp      | 13 +------------
@@ -75,7 +75,7 @@ index f3768091cd0e..49827f16ee89 100644
 +return "LLD " LLD_VERSION_STRING;
  }
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index 135036f509d2..c28bc3f8d19d 100644
+index 5d3ad7a4fd58..796b47a3d554 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
 @@ -20,7 +20,7 @@ if(NOT DEFINED LLVM_VERSION_PATCH)
@@ -88,5 +88,5 @@ index 135036f509d2..c28bc3f8d19d 100644
  
  if (NOT PACKAGE_VERSION)
 -- 
-2.17.1
+2.30.2
 
