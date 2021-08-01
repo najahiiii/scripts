@@ -1,0 +1,40 @@
+From 37a50c6381f62074118e13c3a42e3a5dbb7aba09 Mon Sep 17 00:00:00 2001
+From: Ahmad Thoriq Najahi <najahi@zephyrus.id>
+Date: Sun, 1 Aug 2021 14:33:26 +0000
+Subject: [PATCH] lib{cxx,unwind}: Remove git suffix
+
+Signed-off-by: Ahmad Thoriq Najahi <najahi@zephyrus.id>
+---
+ libcxx/CMakeLists.txt    | 2 +-
+ libunwind/CMakeLists.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
+index 93827cf57b10..2d679e9ad3b8 100644
+--- a/libcxx/CMakeLists.txt
++++ b/libcxx/CMakeLists.txt
+@@ -27,7 +27,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR OR LIBCXX_STANDALONE_BUIL
+   project(libcxx CXX C)
+ 
+   set(PACKAGE_NAME libcxx)
+-  set(PACKAGE_VERSION 14.0.0git)
++  set(PACKAGE_VERSION 14.0.0)
+   set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
+   set(PACKAGE_BUGREPORT "llvm-bugs@lists.llvm.org")
+ 
+diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
+index b1ef11bf7327..5b44b8306b5d 100644
+--- a/libunwind/CMakeLists.txt
++++ b/libunwind/CMakeLists.txt
+@@ -24,7 +24,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR OR LIBUNWIND_STANDALONE_B
+   project(libunwind LANGUAGES C CXX ASM)
+ 
+   set(PACKAGE_NAME libunwind)
+-  set(PACKAGE_VERSION 14.0.0git)
++  set(PACKAGE_VERSION 14.0.0)
+   set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
+   set(PACKAGE_BUGREPORT "llvm-bugs@lists.llvm.org")
+ 
+-- 
+2.17.1
+
