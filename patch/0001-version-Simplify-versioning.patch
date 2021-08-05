@@ -1,4 +1,4 @@
-From a5df293f73ec0d293f40047011756bea6ee35aed Mon Sep 17 00:00:00 2001
+From 605cf5c969409871753808ed1e10dd33c82159af Mon Sep 17 00:00:00 2001
 From: Ahmad Thoriq Najahi <najahi@zephyrus.id>
 Date: Fri, 29 Jan 2021 00:41:37 +0700
 Subject: [PATCH] version: Simplify versioning
@@ -6,9 +6,9 @@ Subject: [PATCH] version: Simplify versioning
 Signed-off-by: Ahmad Thoriq Najahi <najahi@zephyrus.id>
 ---
  clang/lib/Basic/Version.cpp | 10 ++--------
- lld/Common/Version.cpp      | 13 +------------
+ lld/Common/Version.cpp      |  8 +-------
  llvm/CMakeLists.txt         |  2 +-
- 3 files changed, 4 insertions(+), 21 deletions(-)
+ 3 files changed, 4 insertions(+), 16 deletions(-)
 
 diff --git a/clang/lib/Basic/Version.cpp b/clang/lib/Basic/Version.cpp
 index af3118b0f6da..286e6df0dc9a 100644
@@ -53,29 +53,24 @@ index af3118b0f6da..286e6df0dc9a 100644
  #endif
  }
 diff --git a/lld/Common/Version.cpp b/lld/Common/Version.cpp
-index f3768091cd0e..49827f16ee89 100644
+index ec6eda6a6748..2b31bf70be8c 100644
 --- a/lld/Common/Version.cpp
 +++ b/lld/Common/Version.cpp
-@@ -17,16 +17,5 @@
- // Returns a version string, e.g.:
- // lld 9.0.0 (https://github.com/llvm/llvm-project.git 9efdd7ac5e914d3c9fa1ef)
+@@ -18,11 +18,5 @@
+ // LLD 14.0.0 (https://github.com/llvm/llvm-project.git
+ // 2d9759c7902c5cbc9a7e3ab623321d5578d51687)
  std::string lld::getLLDVersion() {
 -#ifdef LLD_VENDOR
 -#define LLD_VENDOR_DISPLAY LLD_VENDOR " "
 -#else
 -#define LLD_VENDOR_DISPLAY
 -#endif
--#if defined(LLD_REPOSITORY) && defined(LLD_REVISION)
--  return LLD_VENDOR_DISPLAY "LLD " LLD_VERSION_STRING " (" LLD_REPOSITORY
--                            " " LLD_REVISION ")";
--#else
 -  return LLD_VENDOR_DISPLAY "LLD " LLD_VERSION_STRING;
--#endif
 -#undef LLD_VENDOR_DISPLAY
 +return "LLD " LLD_VERSION_STRING;
  }
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index 5d3ad7a4fd58..796b47a3d554 100644
+index 50ba9b3be1b8..86d6c7aab258 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
 @@ -20,7 +20,7 @@ if(NOT DEFINED LLVM_VERSION_PATCH)
