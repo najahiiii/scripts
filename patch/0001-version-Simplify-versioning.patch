@@ -1,14 +1,19 @@
-From 605cf5c969409871753808ed1e10dd33c82159af Mon Sep 17 00:00:00 2001
+From a18d9903b24dabfa1a726015d3ef2d0860d2583f Mon Sep 17 00:00:00 2001
 From: Ahmad Thoriq Najahi <najahi@zephyrus.id>
 Date: Fri, 29 Jan 2021 00:41:37 +0700
 Subject: [PATCH] version: Simplify versioning
 
+* Hardcode versioning
+* Remove git suffix
+
 Signed-off-by: Ahmad Thoriq Najahi <najahi@zephyrus.id>
 ---
  clang/lib/Basic/Version.cpp | 10 ++--------
+ libcxx/CMakeLists.txt       |  2 +-
+ libunwind/CMakeLists.txt    |  2 +-
  lld/Common/Version.cpp      |  8 +-------
  llvm/CMakeLists.txt         |  2 +-
- 3 files changed, 4 insertions(+), 16 deletions(-)
+ 5 files changed, 6 insertions(+), 18 deletions(-)
 
 diff --git a/clang/lib/Basic/Version.cpp b/clang/lib/Basic/Version.cpp
 index af3118b0f6da..286e6df0dc9a 100644
@@ -52,6 +57,32 @@ index af3118b0f6da..286e6df0dc9a 100644
    return "";
  #endif
  }
+diff --git a/libcxx/CMakeLists.txt b/libcxx/CMakeLists.txt
+index 93827cf57b10..2d679e9ad3b8 100644
+--- a/libcxx/CMakeLists.txt
++++ b/libcxx/CMakeLists.txt
+@@ -27,7 +27,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR OR LIBCXX_STANDALONE_BUIL
+   project(libcxx CXX C)
+ 
+   set(PACKAGE_NAME libcxx)
+-  set(PACKAGE_VERSION 14.0.0git)
++  set(PACKAGE_VERSION 14.0.0)
+   set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
+   set(PACKAGE_BUGREPORT "llvm-bugs@lists.llvm.org")
+ 
+diff --git a/libunwind/CMakeLists.txt b/libunwind/CMakeLists.txt
+index a73f5b0c7bdf..74f60a7553c6 100644
+--- a/libunwind/CMakeLists.txt
++++ b/libunwind/CMakeLists.txt
+@@ -24,7 +24,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR OR LIBUNWIND_STANDALONE_B
+   project(libunwind LANGUAGES C CXX ASM)
+ 
+   set(PACKAGE_NAME libunwind)
+-  set(PACKAGE_VERSION 14.0.0git)
++  set(PACKAGE_VERSION 14.0.0)
+   set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
+   set(PACKAGE_BUGREPORT "llvm-bugs@lists.llvm.org")
+ 
 diff --git a/lld/Common/Version.cpp b/lld/Common/Version.cpp
 index ec6eda6a6748..2b31bf70be8c 100644
 --- a/lld/Common/Version.cpp
@@ -70,7 +101,7 @@ index ec6eda6a6748..2b31bf70be8c 100644
 +return "LLD " LLD_VERSION_STRING;
  }
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index 50ba9b3be1b8..86d6c7aab258 100644
+index 34392f3308d0..c8103c3548c2 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
 @@ -20,7 +20,7 @@ if(NOT DEFINED LLVM_VERSION_PATCH)
@@ -83,5 +114,5 @@ index 50ba9b3be1b8..86d6c7aab258 100644
  
  if (NOT PACKAGE_VERSION)
 -- 
-2.30.2
+2.17.1
 
