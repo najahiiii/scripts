@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+echo "Cloning dependencies"
+git clone https://github.com/najahiiii/AnyKernel3.git -b asus-unified --depth=1 AnyKernel
+mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
+echo "Done"
+if [ "$is_test" = true ]; then
+     echo "Its alpha test build"
+     unset chat_id
+     unset token
+     export chat_id=${my_id}
+     export token=${nToken}
+     export YEET=-Alpha
+else
+     echo "Its beta release build"
+fi
+SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
+START1=$(date +"%s")
+export ARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export KBUILD_BUILD_HOST=NusantaraDevs
+export LD_LIBRARY_PATH="/root/clang/bin/../lib:$PATH"
+# Push kernel to channel
+function push() {
+    PATH="/root/clang/bin:${PATH}"
+    cd .signer || exit 1
+    ZIP=$(echo *.zip)
+    curl -F document=@"$ZIP" "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F caption="Build took $(($DIFF1 / 60)) minute(s) and $(($DIFF1 % 60)) second(s). | For <b>ASUS ZENFONE MAX PRO M1 (X00T/D) Android 8.1 - 10.0 non-SAR/SAR</b> | <b>$(clang --version | head -n 1 | perl -pe 's/\(https.*?\)//gs' | sed -e 's/  */ /g')</b>"
+}
+# Fin Error
+function finerr() {
+    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+        -d chat_id="$chat_id" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d text="Job Baking Chips throw an error(s)"
+    exit 1
+}
+# Compile plox
+function compile() {
+    make -s -C "$(pwd)" -j"$(nproc)" O=out X00T_defconfig
+    PATH="/root/clang/bin:${PATH}" \
+    make -C "$(pwd)" -j"$(nproc)" O=out \
+                   ARCH=arm64 \
+                   CC=clang \
+                   CLANG_TRIPLE=aarch64-linux-gnu- \
+                   CROSS_COMPILE=aarch64-linux-gnu- \
+                   CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+    if ! [ -a "$IMAGE" ]; then
+        finerr
+        exit 1
+    fi
+    cp out/arch/arm64/boot/Image.gz AnyKernel/kernel/
+}
+# Zipping
+function zipping() {
+    cd AnyKernel || exit 1
+    zip -r9q unsigned.zip * -x LICENSE README.md kernel/placeholder
+    mv unsigned.zip ../.signer/
+    cd ..
+}
+# Signer
+function signer() {
+    cd .signer || exit 1
+    TANGGAL1=$(date +'%H%M-%d%m%y')
+    if [ "$is_test" = true ]; then
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Clang-EAS-Alpha-"${TANGGAL1}-${SHA}".zip
+        rm unsigned.zip
+    else
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Clang-EAS-"${TANGGAL1}-${SHA}".zip
+        rm unsigned.zip
+    fi
+    cd ..
+}
+compile
+zipping
+signer
+END1=$(date +"%s")
+DIFF1=$(($END1 - $START1))
+push

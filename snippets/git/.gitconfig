@@ -1,0 +1,17 @@
+[user]
+	name = Ahmad Thoriq Najahi
+	email = najahi@zephyrus.id
+	signingKey = C4907293C4123FEA50435487F1F4FA115DADBD90
+[credential]
+	helper = cache --timeout=7200
+[commit]
+	gpgSign = true
+[alias]
+	cp = cherry-pick -S
+	cpn = cherry-pick -n
+	c = commit -sS
+	f = fetch
+[core]
+	editor = nano
+[color]
+	ui = auto

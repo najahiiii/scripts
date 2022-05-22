@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+# SemaphoreCI Kernel Build Script
+# Copyright (C) 2019 Ahmad Thoriq Najahi (najahiiii)
+
+#
+# Telegram FUNCTION begin
+#
+
+git clone https://github.com/fabianonline/telegram.sh telegram
+
+TELEGRAM_ID=${chat_id}
+TELEGRAM_TOKEN=${token}
+TELEGRAM=telegram/telegram
+
+export TELEGRAM_TOKEN
+
+# Push kernel installer to channel
+function push() {
+	ZIP=$(echo Chips*.zip)
+	curl -F document=@$ZIP  "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendDocument" \
+			-F chat_id="$TELEGRAM_ID"
+}
+
+# Send the info up
+function tg_channelcast() {
+	"${TELEGRAM}" -c ${TELEGRAM_ID} -H \
+		"$(
+			for POST in "${@}"; do
+				echo "${POST}"
+			done
+		)"
+}
+
+function tg_sendinfo() {
+	curl -s "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" \
+		-d "parse_mode=markdown" \
+		-d text="${1}" \
+		-d chat_id="$TELEGRAM_ID" \
+		-d "disable_web_page_preview=true"
+}
+
+# Function upload logs to my own server paste
+function paste() {
+    cat build.log | curl -F 'chips=<-' http://142.93.125.135 > link
+    HASIL="$(cat link)"
+}
+
+# Fin Error
+function finerr() {
+	paste
+	curl -s "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" \
+		-d "parse_mode=markdown" \
+		-d text="Build throw an error(s) | **Build logs** [here](${HASIL})" \
+		-d chat_id="$TELEGRAM_ID" \
+		-d "disable_web_page_preview=true"
+	exit 1
+}
+
+# Send sticker
+function tg_sendstick() {
+	curl -s -F chat_id=$TELEGRAM_ID -F sticker="CAADBQAD7wADQxCzIs_rqaRTwvagAg" https://api.telegram.org/bot$TELEGRAM_TOKEN/sendSticker
+}
+
+# Fin prober
+function fin() {
+	tg_sendinfo "$(echo "Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.")"
+}
+
+#
+# Telegram FUNCTION end
+#
+
+# Main environtment
+KERNEL_DIR=$(pwd)
+KERN_IMG=$KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb
+ZIP_DIR=$KERNEL_DIR/AnyKernel
+CONFIG=rolex_defconfig
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+THREAD="-j32"
+LOAD="-l32"
+CROSS_COMPILE="$(pwd)/gcc/bin/aarch64-linux-android-"
+
+# Export
+export ARCH=arm64
+export SUBARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export CROSS_COMPILE
+
+# Install build package
+install-package --update-new ccache bc bash git-core gnupg build-essential \
+	zip curl make automake autogen autoconf autotools-dev libtool shtool python \
+	m4 gcc libtool zlib1g-dev libstdc++6
+
+# Clone toolchain
+git clone https://github.com/najahiiii/aarch64-linux-gnu.git -b 4.9-mirror gcc
+# Clone AnyKernel2
+git clone https://github.com/najahiiii/AnyKernel AnyKernel
+
+# Build start
+tanggal=$(TZ=Asia/Jakarta date +'%H%M-%d%m%y')
+DATE=`date`
+BUILD_START=$(date +"%s")
+
+tg_sendstick
+
+tg_channelcast "<b>ChipsKernel</b> new build is up!" \
+		"Started on CircleCI" \
+		"Using <code>CircleCI</code> Docker" \
+		"For device <b>ROLEX</b> (Redmi 4A)" \
+		"At branch <code>${BRANCH}</code>" \
+		"Compiler <code>$(${CROSS_COMPILE}gcc --version | head -n 1)</code>" \
+		"Under commit <code>$(git log --pretty=format:'"%h : %s"' -1)</code>" \
+		"Started on <code>$(TZ=Asia/Jakarta date)</code>"
+
+make -s O=out $CONFIG $THREAD $LOAD
+make O=out $THREAD $LOAD  2>&1| tee build.log
+
+if ! [ -a $KERN_IMG ]; then
+	finerr
+	exit 1
+fi
+
+paste
+cp $KERN_IMG $ZIP_DIR/zImage
+cd $ZIP_DIR
+zip -r9 ChipsKernel-Pie-${tanggal}.zip *
+BUILD_END=$(date +"%s")
+DIFF=$(($BUILD_END - $BUILD_START))
+push
+fin
+# Build end

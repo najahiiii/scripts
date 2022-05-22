@@ -1,0 +1,98 @@
+#!/bin/bash
+echo "Cloning dependencies"
+git clone https://github.com/najahiiii/AnyKernel3.git -b ginkgo --depth=1 AnyKernel
+mkdir .signer && curl -sLo .signer/zipsigner-3.0.jar https://raw.githubusercontent.com/najahiiii/Noob-Script/noob/bin/zipsigner-3.0.jar
+echo "Done"
+CHECKPOINT="$(git log --pretty=format:'%h : %s' -1)"
+case $CHECKPOINT in
+        *"[rel]"*)
+                echo -e "It is release build"
+                export YEET=-r$CIRCLE_BUILD_NUM
+        ;;
+        *)
+                echo -e "teeeeeessssttt reeeeee"
+                export is_test=true
+                unset chat_id
+                unset token
+                export chat_id=${my_id}
+                export token=${nToken}
+                export YEET=-Alpha-rc$CIRCLE_BUILD_NUM
+        ;;
+esac
+KERNEL_DIR=$(pwd)
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+SHA=$(echo "$CIRCLE_SHA1" | cut -c 1-8)
+START3=$(date +"%s")
+export ARCH=arm64
+export KBUILD_BUILD_USER=Najahi
+export KBUILD_BUILD_HOST=NusantaraDevs
+export PATH="/root/clang/bin:${PATH}"
+export CCV=$(clang --version | head -n 1 | perl -pe 's/\(git.*?\)//gs' | sed -e 's/  */ /g')
+export LLDV=$(ld.lld --version | head -n1 | perl -pe 's/\(git.*?\)//gs' | sed 's/(compatible with [^)]*)//' | sed 's/[[:space:]]*$//')
+git config --global user.email "najahiii@outlook.co.id"
+git config --global user.name "Najahiiii"
+# Push kernel to channel
+function push() {
+    cd .signer || exit 1
+    curl -F document=@"$(echo *.zip)" "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F caption="Build took $(($DIFF3 / 60)) minute(s) and $(($DIFF3 % 60)) second(s). | For <b>Xiaomi Redmi Note 8/8T (Ginkgo/Willow) Android 9/Pie</b> #Unified | <b>$CCV, $LLDV</b>"
+}
+# Fin Error
+function finerr() {
+    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+        -d chat_id="$chat_id" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d text="Job Baking Chips throw an error(s), @Najahiii Reeeee..."
+    exit 1
+}
+
+# Compile plox
+function compile() {
+    make -s -C "$(pwd)" -j"$(nproc)" O=out vendor/chips_defconfig
+    make -C "$(pwd)" O=out -j$(nproc) \
+                    CC=clang \
+                    AR=llvm-ar \
+                    NM=llvm-nm \
+                    OBJCOPY=llvm-objcopy \
+                    OBJDUMP=llvm-objdump \
+                    STRIP=llvm-strip \
+                    CROSS_COMPILE=aarch64-linux-gnu- \
+                    CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+        if ! [ -a "$IMAGE" ]; then
+            finerr
+            exit 1
+        fi
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel/
+}
+# Zipping
+function zipping() {
+    cd AnyKernel || exit 1
+    zip -r9q unsigned.zip * -x LICENSE README.md *placeholder
+    mv unsigned.zip ../.signer/
+    cd ..
+}
+# Signer
+function signer() {
+    cd .signer || exit 1
+    TANGGAL3=$(date +'%H%M-%d%m%y')
+    if [ "$is_test" = true ]; then
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Ginkgo-Willow-A9-Alpha-"rc${CIRCLE_BUILD_NUM}-${TANGGAL3}-${SHA}".zip
+        rm unsigned.zip
+    else
+        java -jar zipsigner-3.0.jar \
+        unsigned.zip ChipsKernel-Ginkgo-Willow-A9-"${TANGGAL3}-${SHA}".zip
+        rm unsigned.zip
+    fi
+    cd ..
+}
+compile
+zipping
+signer
+END3=$(date +"%s")
+DIFF3=$(($END3 - $START3))
+push

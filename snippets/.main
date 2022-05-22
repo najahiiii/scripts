@@ -1,0 +1,64 @@
+#!/bin/bash sh
+#
+#
+
+# Env
+export token=#######
+export chat_id=#######
+export KBUILD_BUILD_USER="najahi"
+export KBUILD_BUILD_HOST="rog-zephyrus"
+export CROSS_COMPILE=aarch64-linux-gnu-
+export PATH="$HOME/clang/bin:${PATH}"
+
+# Aliases
+alias relog="source $HOME/.bashrc"
+alias scon="ssh -i $HOME/.ssh/najahi ${1}"
+alias conn="scon najahi@dl.zephyrus.id"
+
+# Required for gpg sign
+export GPG_TTY=$(tty)
+
+# Function to show an informational message
+function msg() {
+    echo -e "\e[1;32m$@\e[0m"
+}
+
+# Compile plox
+function compile() {
+export HASH=$(git log --pretty=format:'%h' -1)
+    make -s -C "$(pwd)" O=out LLVM=1 ${1} ${2} chips_defconfig
+    time make -C "$(pwd)" O=out LLVM=1 ${1} ${2}
+}
+
+# Push
+function bungkus() {
+    find out/arch/arm64/boot/dts/vendor/qcom -name '*.dtb' -exec cat {} + > $HOME/AnyKernel3/dtb
+    cp out/arch/arm64/boot/Image $HOME/AnyKernel3/
+    pushd $HOME/AnyKernel3 >/dev/null 2>&1
+    zip -r9q unsigned.zip *
+    java -jar $HOME/scripts/bin/zipsigner-3.0.jar \
+        unsigned.zip \
+        Chips-OOS_OP9Pro-"$(date +'%H%M-%d%m%y')-${HASH}".zip
+    cp Chips-*.zip /mnt/d/Kernel/
+    rm -rf *.zip dtb Image
+    popd >/dev/null 2>&1
+    msg "Done!"
+}
+
+# Send some file to tg
+function sendtg() {
+   curl --silent --output /dev/null -F document=@"${1}" \
+   "https://api.telegram.org/bot$token/sendDocument" \
+   -F chat_id="$chat_id"
+   msg "Sent!"
+}
+
+# Regen it
+function regen() {
+   make O=out LLVM=1 chips_defconfig
+   cp out/.config arch/arm64/configs/chips_defconfig
+   msg "Done!"
+}
+clear
+neofetch
+msg "Start kernel build script..."
